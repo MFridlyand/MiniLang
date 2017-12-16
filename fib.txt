@@ -1,0 +1,14 @@
+function fib_r ( n , f1 , f2 ) 
+{
+	if n == 0
+	{
+		return f1
+	}	
+	return call fib_r ( n - 1 , f2 + f1 , f1 )
+}
+
+function fib ( n ) {
+	return call fib_r ( n , 0 , 1 )
+}
+
+print call fib ( 40 )

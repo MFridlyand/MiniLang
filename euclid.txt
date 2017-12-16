@@ -1,0 +1,34 @@
+a = 12
+b = 15
+function fib ( n )
+{
+  if n == 0
+  {
+	return 0
+  }
+  if n == 1
+  {
+   return 1
+  }
+  return call fib ( n - 1 ) + call fib ( n - 2 )
+}
+
+function gcd ( m , n )
+{
+	while m > n || m < n
+	{
+		if m > n 
+			{ m = m - n }
+		else
+			{ n = n - m }
+	}
+	return m
+}
+
+gcd = call gcd ( 100 , 2 )
+print gcd
+print a
+
+q = call fib ( 10 )
+print q
+print ( ( 8 + 4 ) * 2 + 1 ) - ( 2 + 3 ) * 5 + 25 * 2
