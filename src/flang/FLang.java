@@ -17,16 +17,6 @@ public class FLang {
 		functions = new HashMap<>();
 	}
 
-	protected boolean isNumber(String s) {
-		boolean result = true;
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			result = false;
-		}
-		return result;
-	}
-
 	protected Token getToken() {
 		return tokens[curToken];
 	}
@@ -36,19 +26,19 @@ public class FLang {
 		return getToken();
 	}
 
-	void putBack() {
+	protected void putBack() {
 		curToken--;
 	}
 
-	int getTokenOffset() {
+	protected int getTokenOffset() {
 		return curToken;
 	}
 
-	void setTokenOffset(int value) {
+	protected void setTokenOffset(int value) {
 		curToken = value;
 	}
 
-	void skipBlock() {
+	protected void skipBlock() {
 		Stack<String> st = new Stack<>();
 		Token tok = getToken();
 		st.push(tok.value);
@@ -62,7 +52,7 @@ public class FLang {
 		nextToken();
 	}
 
-	void block(Context ctx) {
+	protected void block(Context ctx) {
 		nextToken();
 		for (;;) {
 			Token tok = getToken();
@@ -76,7 +66,7 @@ public class FLang {
 		}
 	}
 
-	void st(Context ctx) {
+	protected void st(Context ctx) {
 		Token tok = getToken();
 		switch (tok.type) {
 		case Token.t_id: {
@@ -191,7 +181,7 @@ public class FLang {
 		return funContext.return_value;
 	}
 
-	int id(Context ctx) {
+	protected int id(Context ctx) {
 		String id = getToken().value;
 		return ctx.getValue(id);
 	}
