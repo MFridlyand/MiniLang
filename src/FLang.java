@@ -37,18 +37,19 @@ public class FLang {
 		public int type;
 	}
 
-	public static class Function
-	{
-		Function(String args[], int tokenOffset)
-		{
+	private static class Function {
+		Function(String args[], int tokenOffset) {
 			this.args = args;
 			this.tokenOffset = tokenOffset;
 		}
+
 		public String args[];
 		public int tokenOffset;
 	}
+
 	HashMap<String, Function> functions;
-	public static class Context {
+
+	private static class Context {
 		HashMap<String, Integer> variables;
 		boolean was_return;
 		int return_value;
@@ -143,53 +144,6 @@ public class FLang {
 		tokens = t.toArray(new Token[t.size()]);
 	}
 
-	protected void funDef()
-	{
-		String name = nextToken().value;
-		nextToken();//eat (
-		ArrayList<String> argList = new ArrayList<>();
-		Token t = nextToken();
-		for (;; )
-		{
-			if (t.type == Token.r_bracket)
-				break;
-			argList.add(t.value);
-			t = nextToken(); //eat ','
-			if (t.type == Token.r_bracket)
-				break;
-			
-			t = nextToken();
-		}
-		nextToken(); //eat )
-		int offset = getTokenOffset();
-		String[] args = argList.toArray(new String[0]);
-		functions.put(name, new Function(args, offset));
-		skipBlock();
-	}
-	
-	protected int funCall(Context ctx)
-	{
-		String name = nextToken().value;
-		nextToken();//eat name
-		nextToken();//eat (
-		Function f = (Function)functions.get(name);
-		int args[] = new int[f.args.length];
-		Context funContext = new Context();
-		for (int i = 0; i < args.length; i++)
-		{
-			int v = e(ctx);
-			funContext.setValue(f.args[i], v);
-			if (getToken().type != Token.r_bracket)
-				nextToken();
-		}
-		nextToken(); // eat )
-		int tok = getTokenOffset();
-		setTokenOffset(f.tokenOffset);
-		block(funContext);
-		setTokenOffset(tok);
-		return funContext.return_value;
-	}
-	
 	protected Token getToken() {
 		return tokens[curToken];
 	}
@@ -249,17 +203,17 @@ public class FLang {
 			int v = e(ctx);
 			ctx.setValue(ident, v);
 		}
-		break;
+			break;
 		case Token.t_function: {
 			funDef();
-		}			
-		break;
+		}
+			break;
 		case Token.t_return: {
 			nextToken();
 			ctx.return_value = e(ctx);
 			ctx.was_return = true;
-		}			
-		break;
+		}
+			break;
 		case Token.t_if: {
 			if (ctx.was_return)
 				return;
@@ -271,7 +225,6 @@ public class FLang {
 					return;
 				Token t_else = getToken();
 				if (t_else.type != Token.t_else) {
-					// putBack();
 					return;
 				}
 				nextToken();
@@ -280,7 +233,6 @@ public class FLang {
 				skipBlock();
 				Token t_else = getToken();
 				if (t_else.type != Token.t_else) {
-					// putBack();
 					return;
 				}
 				nextToken();
@@ -312,6 +264,49 @@ public class FLang {
 			break;
 		}
 	}
+	
+	protected void funDef() {
+		String name = nextToken().value;
+		nextToken();// eat (
+		ArrayList<String> argList = new ArrayList<>();
+		Token tok = nextToken();
+		for (;;) {
+			if (tok.type == Token.r_bracket)
+				break;
+			argList.add(tok.value);
+			tok = nextToken(); // eat ','
+			if (tok.type == Token.r_bracket)
+				break;
+
+			tok = nextToken();
+		}
+		nextToken(); // eat )
+		int offset = getTokenOffset();
+		String[] args = argList.toArray(new String[0]);
+		functions.put(name, new Function(args, offset));
+		skipBlock();
+	}
+
+	protected int funCall(Context ctx) {
+		String name = nextToken().value;
+		nextToken();// eat name
+		nextToken();// eat (
+		Function f = (Function) functions.get(name);
+		int args[] = new int[f.args.length];
+		Context funContext = new Context();
+		for (int i = 0; i < args.length; i++) {
+			int arg_value = e(ctx);
+			funContext.setValue(f.args[i], arg_value);
+			if (getToken().type != Token.r_bracket)
+				nextToken();
+		}
+		nextToken(); // eat )
+		int tok = getTokenOffset();
+		setTokenOffset(f.tokenOffset);
+		block(funContext);
+		setTokenOffset(tok);
+		return funContext.return_value;
+	}
 
 	int id(Context ctx) {
 		String id = getToken().value;
@@ -324,7 +319,6 @@ public class FLang {
 		boolean has_or = false;
 		for (;;) {
 			Token tok = getToken();
-
 			if (tok.type != Token.or_op) {
 				if (!has_or)
 					return t1;
@@ -345,7 +339,6 @@ public class FLang {
 		boolean has_and = false;
 		for (;;) {
 			Token tok = getToken();
-
 			if (tok.type != Token.and_op) {
 				if (!has_and)
 					return t1;
@@ -380,19 +373,15 @@ public class FLang {
 	}
 
 	protected int e3(Context ctx) {
-
 		int t1 = t(ctx);
-
 		for (;;) {
 			Token tok = getToken();
-
 			if (tok.type != Token.add_op) {
 				break;
 			}
 
 			nextToken();
 			int t2 = t(ctx);
-
 			if (tok.value.equals("+"))
 				t1 = t1 + t2;
 			else
@@ -402,17 +391,16 @@ public class FLang {
 	}
 
 	protected int t(Context ctx) {
-		Token e = getToken();
 		int f1 = f(ctx);
 		for (;;) {
-			e = getToken();
-			if (e.type != Token.mul_op) {
+			Token tok = getToken();
+			if (tok.type != Token.mul_op) {
 				break;
 			}
 
 			nextToken();
 			int f2 = f(ctx);
-			if (e.value.equals("*"))
+			if (tok.value.equals("*"))
 				f1 = f1 * f2;
 			else
 				f1 = f1 / f2;
@@ -421,17 +409,17 @@ public class FLang {
 	}
 
 	protected int f(Context ctx) {
-		Token e = getToken();
-		if (e.type == Token.l_bracket) {
+		Token tok = getToken();
+		if (tok.type == Token.l_bracket) {
 			nextToken(); // eat '('
 			int res = e(ctx);
 			nextToken(); // eat ')'
 			return res;
-		} else if (e.type == Token.t_call)
+		} else if (tok.type == Token.t_call)
 			return funCall(ctx);
 		int num = -1;
-		if (e.type == Token.number)
-			num = Integer.parseInt(e.value);
+		if (tok.type == Token.number)
+			num = Integer.parseInt(tok.value);
 		else
 			num = id(ctx);
 		nextToken();
