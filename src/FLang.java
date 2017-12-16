@@ -28,16 +28,34 @@ public class FLang {
 		public static final int t_if = 15;
 		public static final int t_else = 16;
 		public static final int t_while = 17;
+		public static final int t_function = 18;
+		public static final int t_colon = 19;
+		public static final int t_call = 20;
+		public static final int t_return = 21;
 
 		public String value;
 		public int type;
 	}
 
+	public static class Function
+	{
+		Function(String args[], int tokenOffset)
+		{
+			this.args = args;
+			this.tokenOffset = tokenOffset;
+		}
+		public String args[];
+		public int tokenOffset;
+	}
+	HashMap<String, Function> functions;
 	public static class Context {
 		HashMap<String, Integer> variables;
+		boolean was_return;
+		int return_value;
 
 		Context() {
 			variables = new HashMap<>();
+			was_return = false;
 		}
 
 		public void setValue(String s, int v) {
@@ -58,6 +76,7 @@ public class FLang {
 		this.expr = expr;
 		tokenize(this.expr);
 		curToken = 0;
+		functions = new HashMap<>();
 	}
 
 	protected boolean isNumber(String s) {
@@ -89,7 +108,7 @@ public class FLang {
 				tok.type = Token.or_op;
 			else if (s.equals("&&"))
 				tok.type = Token.and_op;
-			else if (s.equals(">") || s.equals("<"))
+			else if (s.equals(">") || s.equals("<") || s.equals("==") || s.equals("!="))
 				tok.type = Token.cmp_op;
 			else if (s.equals("="))
 				tok.type = Token.t_assign;
@@ -103,6 +122,14 @@ public class FLang {
 				tok.type = Token.t_else;
 			else if (s.equals("while"))
 				tok.type = Token.t_while;
+			else if (s.equals("function"))
+				tok.type = Token.t_function;
+			else if (s.equals(","))
+				tok.type = Token.t_colon;
+			else if (s.equals("call"))
+				tok.type = Token.t_call;
+			else if (s.equals("return"))
+				tok.type = Token.t_return;
 			else if (s.equals("print"))
 				tok.type = Token.t_print;
 			else if (!isNumber(s))
@@ -116,6 +143,53 @@ public class FLang {
 		tokens = t.toArray(new Token[t.size()]);
 	}
 
+	protected void funDef()
+	{
+		String name = nextToken().value;
+		nextToken();//eat (
+		ArrayList<String> argList = new ArrayList<>();
+		Token t = nextToken();
+		for (;; )
+		{
+			if (t.type == Token.r_bracket)
+				break;
+			argList.add(t.value);
+			t = nextToken(); //eat ','
+			if (t.type == Token.r_bracket)
+				break;
+			
+			t = nextToken();
+		}
+		nextToken(); //eat )
+		int offset = getTokenOffset();
+		String[] args = argList.toArray(new String[0]);
+		functions.put(name, new Function(args, offset));
+		skipBlock();
+	}
+	
+	protected int funCall(Context ctx)
+	{
+		String name = nextToken().value;
+		nextToken();//eat name
+		nextToken();//eat (
+		Function f = (Function)functions.get(name);
+		int args[] = new int[f.args.length];
+		Context funContext = new Context();
+		for (int i = 0; i < args.length; i++)
+		{
+			int v = e(ctx);
+			funContext.setValue(f.args[i], v);
+			if (getToken().type != Token.r_bracket)
+				nextToken();
+		}
+		nextToken(); // eat )
+		int tok = getTokenOffset();
+		setTokenOffset(f.tokenOffset);
+		block(funContext);
+		setTokenOffset(tok);
+		return funContext.return_value;
+	}
+	
 	protected Token getToken() {
 		return tokens[curToken];
 	}
@@ -160,6 +234,8 @@ public class FLang {
 				return;
 			}
 			st(ctx);
+			if (ctx.was_return)
+				return;
 		}
 	}
 
@@ -173,12 +249,26 @@ public class FLang {
 			int v = e(ctx);
 			ctx.setValue(ident, v);
 		}
-			break;
+		break;
+		case Token.t_function: {
+			funDef();
+		}			
+		break;
+		case Token.t_return: {
+			nextToken();
+			ctx.return_value = e(ctx);
+			ctx.was_return = true;
+		}			
+		break;
 		case Token.t_if: {
+			if (ctx.was_return)
+				return;
 			nextToken();
 			int cond = e(ctx);
 			if (cond != 0) {
 				block(ctx);
+				if (ctx.was_return)
+					return;
 				Token t_else = getToken();
 				if (t_else.type != Token.t_else) {
 					// putBack();
@@ -199,11 +289,15 @@ public class FLang {
 		}
 			break;
 		case Token.t_while: {
+			if (ctx.was_return)
+				return;
 			nextToken();
 			int token_offset = getTokenOffset();
 			int cond = e(ctx);
 			while (cond != 0) {
 				block(ctx);
+				if (ctx.was_return)
+					return;
 				setTokenOffset(token_offset);
 				cond = e(ctx);
 			}
@@ -276,8 +370,12 @@ public class FLang {
 		boolean result = false;
 		if (tok.value.equals(">"))
 			result = v1 > v2;
-		else
+		else if (tok.value.equals("<"))
 			result = v1 < v2;
+		else if (tok.value.equals("=="))
+			result = v1 == v2;
+		else
+			result = v1 != v2;
 		return result ? 1 : 0;
 	}
 
@@ -306,7 +404,6 @@ public class FLang {
 	protected int t(Context ctx) {
 		Token e = getToken();
 		int f1 = f(ctx);
-
 		for (;;) {
 			e = getToken();
 			if (e.type != Token.mul_op) {
@@ -320,7 +417,6 @@ public class FLang {
 			else
 				f1 = f1 / f2;
 		}
-
 		return f1;
 	}
 
@@ -331,7 +427,8 @@ public class FLang {
 			int res = e(ctx);
 			nextToken(); // eat ')'
 			return res;
-		}
+		} else if (e.type == Token.t_call)
+			return funCall(ctx);
 		int num = -1;
 		if (e.type == Token.number)
 			num = Integer.parseInt(e.value);

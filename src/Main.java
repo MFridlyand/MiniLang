@@ -8,7 +8,7 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		try {
-			String program = new String(Files.readAllBytes(Paths.get("d:/misha/src/euclid.txt")));
+			String program = new String(Files.readAllBytes(Paths.get("d:/misha/src/fib.txt")));
 			FLang lang = new FLang(program);
 			lang.eval();
 		} catch (IOException e) {
