@@ -1,7 +1,6 @@
 package flang;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 public class FLang {
 	
@@ -39,15 +38,13 @@ public class FLang {
 	}
 
 	protected void skipBlock() {
-		Stack<String> st = new Stack<>();
-		Token tok = getToken();
-		st.push(tok.value);
-		while (!st.empty()) {
-			tok = nextToken();
+		int brackets = 1;
+		while (brackets > 0) {
+			Token tok = nextToken();
 			if (tok.type == Token.l_brace)
-				st.push(tok.value);
+				brackets++;
 			if (tok.type == Token.r_brace)
-				st.pop();
+				brackets--;
 		}
 		nextToken();
 	}
