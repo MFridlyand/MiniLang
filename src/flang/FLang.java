@@ -1,10 +1,11 @@
 package flang;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FLang {
 	
-	private HashMap<String, Function> functions;
+	private Map<String, Function> functions;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
@@ -172,9 +173,9 @@ public class FLang {
 		}
 		nextToken(); // eat )
 		int tok = getTokenOffset();
-		setTokenOffset(f.tokenOffset);
-		block(funContext);
-		setTokenOffset(tok);
+		setTokenOffset(f.tokenOffset);//jump to function body
+		block(funContext);//execute function body
+		setTokenOffset(tok);//jump back
 		return funContext.return_value;
 	}
 

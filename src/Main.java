@@ -9,9 +9,10 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		try {
-			String program = new String(Files.readAllBytes(Paths.get("d:/misha/src/euclid.txt")));
+			String program = new String(Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\euclid.txt")));
 			FLang lang = new FLang(program);
 			lang.eval();
+			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

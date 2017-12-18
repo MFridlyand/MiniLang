@@ -1,8 +1,9 @@
 package flang;
 import java.util.HashMap;
+import java.util.Map;
 
 class Context {
-	HashMap<String, Integer> variables;
+	Map<String, Integer> variables;
 	boolean was_return;
 	int return_value;
 
