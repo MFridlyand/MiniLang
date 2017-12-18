@@ -29,6 +29,6 @@ gcd = call gcd ( 100 , 2 )
 print gcd
 print a
 
-q = call fib ( 40 )
+q = call fib ( 10 )
 print q
-print ( ( 8 + 4 ) * 2 + 1 ) - ( 2 + 3 ) * 5 + 25 * 2
+print - 2

@@ -281,6 +281,11 @@ public class FLang {
 
 	protected int f(Context ctx) {
 		Token tok = getToken();
+		if (tok.value.equals("-"))
+		{
+			nextToken();
+			return -f(ctx);
+		}
 		if (tok.type == Token.l_bracket) {
 			nextToken(); // eat '('
 			int res = e(ctx);
