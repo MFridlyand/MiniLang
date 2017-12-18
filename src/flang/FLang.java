@@ -1,10 +1,11 @@
 package flang;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FLang {
-	
+
 	private Map<String, Function> functions;
 	private String expr;
 	private Token[] tokens;
@@ -135,7 +136,7 @@ public class FLang {
 			break;
 		}
 	}
-	
+
 	protected void funDef() {
 		String name = nextToken().value;
 		nextToken();// eat (
@@ -173,9 +174,9 @@ public class FLang {
 		}
 		nextToken(); // eat )
 		int tok = getTokenOffset();
-		setTokenOffset(f.tokenOffset);//jump to function body
-		block(funContext);//execute function body
-		setTokenOffset(tok);//jump back
+		setTokenOffset(f.tokenOffset);// jump to function body
+		block(funContext);// execute function body
+		setTokenOffset(tok);// jump back
 		return funContext.return_value;
 	}
 
@@ -279,12 +280,22 @@ public class FLang {
 		return f1;
 	}
 
+	protected int not(int v) {
+		if (v != 0)
+			return 0;
+		else
+			return 1;
+	}
+
 	protected int f(Context ctx) {
 		Token tok = getToken();
-		if (tok.value.equals("-"))
-		{
+		if (tok.value.equals("-")) {
 			nextToken();
 			return -f(ctx);
+		}
+		if (tok.type == Token.t_not) {
+			nextToken();
+			return not(f(ctx));
 		}
 		if (tok.type == Token.l_bracket) {
 			nextToken(); // eat '('

@@ -31,6 +31,7 @@ class Token {
 	public static final int t_colon = 19;
 	public static final int t_call = 20;
 	public static final int t_return = 21;
+	public static final int t_not = 22;
 
 	public String value;
 	public int type;
@@ -86,6 +87,8 @@ class Token {
 				tok.type = Token.t_call;
 			else if (s.equals("return"))
 				tok.type = Token.t_return;
+			else if (s.equals("!"))
+				tok.type = Token.t_not;
 			else if (s.equals("print"))
 				tok.type = Token.t_print;
 			else if (!isNumber(s))
