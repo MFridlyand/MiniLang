@@ -30,5 +30,5 @@ print gcd
 print a
 
 q = call fib ( 10 )
-print ! q
+print  q
 print - 1 - 2

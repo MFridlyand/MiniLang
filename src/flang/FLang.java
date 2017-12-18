@@ -65,75 +65,75 @@ public class FLang {
 		}
 	}
 
+	protected void stIf(Context ctx) {
+		nextToken();
+		int cond = e(ctx);
+		if (cond != 0) {
+			block(ctx);
+			if (ctx.was_return)
+				return;
+			Token t_else = getToken();
+			if (t_else.type != Token.t_else) {
+				return;
+			}
+			nextToken();
+			skipBlock();
+		} else {
+			skipBlock();
+			Token t_else = getToken();
+			if (t_else.type != Token.t_else) {
+				return;
+			}
+			nextToken();
+			block(ctx);
+		}
+	}
+
+	protected void stWhile(Context ctx) {
+		nextToken(); //eat while
+		int token_offset = getTokenOffset();
+		int cond = e(ctx);
+		while (cond != 0) {
+			block(ctx);
+			if (ctx.was_return)
+				return;
+			setTokenOffset(token_offset);
+			cond = e(ctx);
+		}
+		skipBlock();
+	}
+
 	protected void st(Context ctx) {
 		Token tok = getToken();
 		switch (tok.type) {
-		case Token.t_id: {
+		case Token.t_id: // process assignment
 			String ident = getToken().value;
 			nextToken(); // eat id
 			nextToken(); // eat assign
 			int v = e(ctx);
 			ctx.setValue(ident, v);
-		}
 			break;
-		case Token.t_function: {
+		case Token.t_function:
 			funDef();
-		}
 			break;
-		case Token.t_return: {
-			nextToken();
+		case Token.t_return:
+			nextToken(); //eat return
 			ctx.return_value = e(ctx);
 			ctx.was_return = true;
-		}
 			break;
-		case Token.t_if: {
-			if (ctx.was_return)
-				return;
-			nextToken();
-			int cond = e(ctx);
-			if (cond != 0) {
-				block(ctx);
-				if (ctx.was_return)
-					return;
-				Token t_else = getToken();
-				if (t_else.type != Token.t_else) {
-					return;
-				}
-				nextToken();
-				skipBlock();
-			} else {
-				skipBlock();
-				Token t_else = getToken();
-				if (t_else.type != Token.t_else) {
-					return;
-				}
-				nextToken();
-				block(ctx);
-			}
-		}
+		case Token.t_if:
+			stIf(ctx);
 			break;
-		case Token.t_while: {
-			if (ctx.was_return)
-				return;
-			nextToken();
-			int token_offset = getTokenOffset();
-			int cond = e(ctx);
-			while (cond != 0) {
-				block(ctx);
-				if (ctx.was_return)
-					return;
-				setTokenOffset(token_offset);
-				cond = e(ctx);
-			}
-			skipBlock();
-		}
+		case Token.t_while:
+			stWhile(ctx);
 			break;
-		case Token.t_print: {
+		case Token.t_print:
 			nextToken(); // eat print
-			int v = e(ctx);
-			System.out.println(v);
-		}
+			int printValue = e(ctx);
+			System.out.println(printValue);
 			break;
+		default:
+			System.out.println("Unknown token " + tok.value);
 		}
 	}
 
