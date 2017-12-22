@@ -32,6 +32,7 @@ class Token {
 	public static final int t_call = 20;
 	public static final int t_return = 21;
 	public static final int t_not = 22;
+	public static final int t_str = 23;
 
 	public String value;
 	public int type;
@@ -44,6 +45,12 @@ class Token {
 			result = false;
 		}
 		return result;
+	}
+	
+	public static boolean isStringLiteral(String s) {
+		if (s.length() < 2)
+			return false;
+		return s.startsWith("\"") && s.endsWith("\"");
 	}
 	
 	public static Token[] tokenize(String expr) {
@@ -89,6 +96,8 @@ class Token {
 				tok.type = Token.t_return;
 			else if (s.equals("!"))
 				tok.type = Token.t_not;
+			else if (isStringLiteral(s))
+				tok.type = Token.t_str;
 			else if (s.equals("print"))
 				tok.type = Token.t_print;
 			else if (!isNumber(s))

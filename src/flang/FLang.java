@@ -90,7 +90,7 @@ public class FLang {
 	}
 
 	protected void stWhile(Context ctx) {
-		nextToken(); //eat while
+		nextToken(); // eat while
 		int token_offset = getTokenOffset();
 		int cond = e(ctx);
 		while (cond != 0) {
@@ -117,7 +117,7 @@ public class FLang {
 			funDef();
 			break;
 		case Token.t_return:
-			nextToken(); //eat return
+			nextToken(); // eat return
 			ctx.return_value = e(ctx);
 			ctx.was_return = true;
 			break;
@@ -128,9 +128,16 @@ public class FLang {
 			stWhile(ctx);
 			break;
 		case Token.t_print:
-			nextToken(); // eat print
-			int printValue = e(ctx);
-			System.out.println(printValue);
+			Token p = nextToken(); // eat print
+			if (p.type == Token.t_str) {
+				String unquote = p.value.substring(1, p.value.length() - 1);
+				unquote = unquote.replaceAll("_", " ");
+				System.out.println(unquote);
+				nextToken();
+			} else {
+				int printValue = e(ctx);
+				System.out.println(printValue);
+			}
 			break;
 		default:
 			System.out.println("Unknown token " + tok.value);
