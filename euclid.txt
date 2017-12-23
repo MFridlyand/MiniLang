@@ -29,7 +29,7 @@ gcd = call gcd ( 100 , 40 )
 print gcd
 print a
 
-print "Fibbonacci_number_10:"
+print "10ое_число_фибоначи:"
 q = call fib ( 10 )
 print  q
 print - 1 - 2

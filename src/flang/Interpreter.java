@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FLang {
+public class Interpreter {
 
 	private Map<String, Function> functions;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
 
-	public FLang(String expr) {
+	public Interpreter(String expr) {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;

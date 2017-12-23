@@ -10,7 +10,7 @@ public class Main {
 
 		try {
 			String program = new String(Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\euclid.txt")));
-			FLang lang = new FLang(program);
+			Interpreter lang = new Interpreter(program);
 			lang.eval();
 			System.out.println("done");
 		} catch (IOException e) {
