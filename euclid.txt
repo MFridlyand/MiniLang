@@ -30,6 +30,6 @@ print gcd
 print a
 
 print "10s_fib_number:"
-q = call fib ( 20 )
+q = call fib ( 10 )
 print  q
 print call mod ( 30 , 7 )

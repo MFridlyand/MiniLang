@@ -11,10 +11,7 @@ public class Interpreter {
 	private Token[] tokens;
 	private int curToken;
 
-	public Interpreter(String expr) {
-		this.expr = expr;
-		tokens = Token.tokenize(this.expr);
-		curToken = 0;
+	public Interpreter() {
 		functions = new HashMap<>();
 	}
 
@@ -181,7 +178,7 @@ public class Interpreter {
 			int arg_value = e(ctx);
 			funContext.setValue(args[i], arg_value);
 			if (getToken().type != Token.r_bracket)
-				nextToken(); //eat ','
+				nextToken(); // eat ','
 		}
 		nextToken(); // eat )
 		if (f instanceof UserFunction) {
@@ -328,7 +325,10 @@ public class Interpreter {
 		return num;
 	}
 
-	public void eval() {
+	public void eval(String expr) {
+		this.expr = expr;
+		tokens = Token.tokenize(this.expr);
+		curToken = 0;
 		Context ctx = new Context();
 		for (;;) {
 			Token tok = getToken();
