@@ -29,7 +29,7 @@ gcd = call gcd ( 100 , 40 )
 print gcd
 print a
 
-print "10ое_число_фибоначи:"
-q = call fib ( 10 )
+print "10s_fib_number:"
+q = call fib ( 20 )
 print  q
-print - 1 - 2
+print call mod ( 30 , 7 )

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Interpreter {
 
-	private Map<String, Function> functions;
+	private Map<String, IFunction> functions;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
@@ -16,6 +16,10 @@ public class Interpreter {
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;
 		functions = new HashMap<>();
+	}
+
+	public void registerFunction(String name, IFunction f) {
+		functions.put(name, f);
 	}
 
 	protected Token getToken() {
@@ -162,7 +166,7 @@ public class Interpreter {
 		nextToken(); // eat )
 		int offset = getTokenOffset();
 		String[] args = argList.toArray(new String[0]);
-		functions.put(name, new Function(args, offset));
+		functions.put(name, new UserFunction(args, offset));
 		skipBlock();
 	}
 
@@ -170,20 +174,24 @@ public class Interpreter {
 		String name = nextToken().value;
 		nextToken();// eat name
 		nextToken();// eat (
-		Function f = (Function) functions.get(name);
-		int args[] = new int[f.args.length];
+		IFunction f = (IFunction) functions.get(name);
 		Context funContext = new Context();
+		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
 			int arg_value = e(ctx);
-			funContext.setValue(f.args[i], arg_value);
+			funContext.setValue(args[i], arg_value);
 			if (getToken().type != Token.r_bracket)
-				nextToken();
+				nextToken(); //eat ','
 		}
 		nextToken(); // eat )
-		int tok = getTokenOffset();
-		setTokenOffset(f.tokenOffset);// jump to function body
-		block(funContext);// execute function body
-		setTokenOffset(tok);// jump back
+		if (f instanceof UserFunction) {
+			UserFunction fUser = (UserFunction) f;
+			int tok = getTokenOffset();
+			setTokenOffset(fUser.tokenOffset);// jump to function body
+			block(funContext);// execute function body
+			setTokenOffset(tok);// jump back
+		} else // built in function
+			f.execute(funContext);
 		return funContext.return_value;
 	}
 

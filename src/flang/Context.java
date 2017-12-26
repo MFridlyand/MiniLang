@@ -2,10 +2,10 @@ package flang;
 import java.util.HashMap;
 import java.util.Map;
 
-class Context {
+public class Context {
 	Map<String, Integer> variables;
-	boolean was_return;
-	int return_value;
+	public boolean was_return;
+	public int return_value;
 
 	Context() {
 		variables = new HashMap<>();
@@ -17,7 +17,7 @@ class Context {
 	}
 
 	public int getValue(String s) {
-		int v = (Integer) variables.get(s);
+		int v = variables.get(s);
 		return v;
 	}
 }
