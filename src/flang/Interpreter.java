@@ -68,7 +68,7 @@ public class Interpreter {
 
 	protected void stIf(Context ctx) {
 		nextToken();
-		int cond = e(ctx);
+		double cond = e(ctx);
 		if (cond != 0) {
 			block(ctx);
 			if (ctx.was_return)
@@ -93,7 +93,7 @@ public class Interpreter {
 	protected void stWhile(Context ctx) {
 		nextToken(); // eat while
 		int token_offset = getTokenOffset();
-		int cond = e(ctx);
+		double cond = e(ctx);
 		while (cond != 0) {
 			block(ctx);
 			if (ctx.was_return)
@@ -111,7 +111,7 @@ public class Interpreter {
 			String ident = getToken().value;
 			nextToken(); // eat id
 			nextToken(); // eat assign
-			int v = e(ctx);
+			double v = e(ctx);
 			ctx.setValue(ident, v);
 			break;
 		case Token.t_function:
@@ -136,8 +136,13 @@ public class Interpreter {
 				System.out.println(unquote);
 				nextToken();
 			} else {
-				int printValue = e(ctx);
-				System.out.println(printValue);
+				double printValue = e(ctx);
+				if ((printValue == Math.floor(printValue)) && !Double.isInfinite(printValue)) {
+				    long val = (long)printValue;
+				    System.out.println(val);
+				}
+				else
+					System.out.println(printValue);
 			}
 			break;
 		default:
@@ -167,7 +172,7 @@ public class Interpreter {
 		skipBlock();
 	}
 
-	protected int funCall(Context ctx) {
+	protected double funCall(Context ctx) {
 		String name = nextToken().value;
 		nextToken();// eat name
 		nextToken();// eat (
@@ -175,7 +180,7 @@ public class Interpreter {
 		Context funContext = new Context();
 		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
-			int arg_value = e(ctx);
+			double arg_value = e(ctx);
 			funContext.setValue(args[i], arg_value);
 			if (getToken().type != Token.r_bracket)
 				nextToken(); // eat ','
@@ -192,13 +197,13 @@ public class Interpreter {
 		return funContext.return_value;
 	}
 
-	protected int id(Context ctx) {
+	protected double id(Context ctx) {
 		String id = getToken().value;
 		return ctx.getValue(id);
 	}
 
-	protected int e(Context ctx) {
-		int t1 = e1(ctx);
+	protected double e(Context ctx) {
+		double t1 = e1(ctx);
 		boolean result = t1 != 0;
 		boolean has_or = false;
 		for (;;) {
@@ -217,8 +222,8 @@ public class Interpreter {
 		return result ? 1 : 0;
 	}
 
-	protected int e1(Context ctx) {
-		int t1 = e2(ctx);
+	protected double e1(Context ctx) {
+		double t1 = e2(ctx);
 		boolean result = t1 != 0;
 		boolean has_and = false;
 		for (;;) {
@@ -237,13 +242,13 @@ public class Interpreter {
 		return result ? 1 : 0;
 	}
 
-	protected int e2(Context ctx) {
-		int v1 = e3(ctx);
+	protected double e2(Context ctx) {
+		double v1 = e3(ctx);
 		Token tok = getToken();
 		if (tok.type != Token.cmp_op)
 			return v1;
 		nextToken();
-		int v2 = e3(ctx);
+		double v2 = e3(ctx);
 		boolean result = false;
 		if (tok.value.equals(">"))
 			result = v1 > v2;
@@ -256,8 +261,8 @@ public class Interpreter {
 		return result ? 1 : 0;
 	}
 
-	protected int e3(Context ctx) {
-		int t1 = t(ctx);
+	protected double e3(Context ctx) {
+		double t1 = t(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.add_op) {
@@ -265,7 +270,7 @@ public class Interpreter {
 			}
 
 			nextToken();
-			int t2 = t(ctx);
+			double t2 = t(ctx);
 			if (tok.value.equals("+"))
 				t1 = t1 + t2;
 			else
@@ -274,8 +279,8 @@ public class Interpreter {
 		return t1;
 	}
 
-	protected int t(Context ctx) {
-		int f1 = f(ctx);
+	protected double t(Context ctx) {
+		double f1 = f(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.mul_op) {
@@ -283,7 +288,7 @@ public class Interpreter {
 			}
 
 			nextToken();
-			int f2 = f(ctx);
+			double f2 = f(ctx);
 			if (tok.value.equals("*"))
 				f1 = f1 * f2;
 			else
@@ -292,14 +297,14 @@ public class Interpreter {
 		return f1;
 	}
 
-	protected int not(int v) {
+	protected double not(double v) {
 		if (v != 0)
 			return 0;
 		else
 			return 1;
 	}
 
-	protected int f(Context ctx) {
+	protected double f(Context ctx) {
 		Token tok = getToken();
 		if (tok.value.equals("-")) {
 			nextToken();
@@ -311,14 +316,14 @@ public class Interpreter {
 		}
 		if (tok.type == Token.l_bracket) {
 			nextToken(); // eat '('
-			int res = e(ctx);
+			double res = e(ctx);
 			nextToken(); // eat ')'
 			return res;
 		} else if (tok.type == Token.t_call)
 			return funCall(ctx);
-		int num = -1;
+		double num = -1;
 		if (tok.type == Token.number)
-			num = Integer.parseInt(tok.value);
+			num = Double.parseDouble(tok.value);
 		else
 			num = id(ctx);
 		nextToken();

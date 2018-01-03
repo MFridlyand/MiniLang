@@ -17,8 +17,8 @@ public class Main {
 
 		@Override
 		public int execute(Context ctx) {
-			int p = ctx.getValue("p");
-			int q = ctx.getValue("q");
+			int p = (int)ctx.getValue("p");
+			int q = (int)ctx.getValue("q");
 			ctx.return_value = p % q;
 			return 1;
 		}

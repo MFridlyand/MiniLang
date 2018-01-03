@@ -3,21 +3,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Context {
-	Map<String, Integer> variables;
+	Map<String, Double> variables;
 	public boolean was_return;
-	public int return_value;
+	public double return_value;
 
 	Context() {
 		variables = new HashMap<>();
 		was_return = false;
 	}
 
-	public void setValue(String s, int v) {
+	public void setValue(String s, double v) {
 		variables.put(s, v);
 	}
 
-	public int getValue(String s) {
-		int v = variables.get(s);
+	public double getValue(String s) {
+		double v = variables.get(s);
 		return v;
 	}
 }
