@@ -11,4 +11,4 @@ function fib ( n ) {
 	return call fib_r ( n , 0 , 1 )
 }
 
-print call fib ( 40 )
+print call fib ( 55 )

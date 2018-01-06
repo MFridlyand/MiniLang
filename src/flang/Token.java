@@ -13,8 +13,8 @@ class Token {
 	public static final int number = 1;
 	public static final int add_op = 2;
 	public static final int mul_op = 3;
-	public static final int l_bracket = 4;
-	public static final int r_bracket = 5;
+	public static final int l_paren = 4;
+	public static final int r_paren = 5;
 	public static final int t_end = 6;
 	public static final int t_id = 7;
 	public static final int t_assign = 8;
@@ -61,9 +61,9 @@ class Token {
 				continue;
 			Token tok = new Token();
 			if (s.equals("("))
-				tok.type = Token.l_bracket;
+				tok.type = Token.l_paren;
 			else if (s.equals(")"))
-				tok.type = Token.r_bracket;
+				tok.type = Token.r_paren;
 			else if (s.equals("+") || s.equals("-"))
 				tok.type = Token.add_op;
 			else if (s.equals("*") || s.equals("/"))

@@ -129,24 +129,28 @@ public class Interpreter {
 			stWhile(ctx);
 			break;
 		case Token.t_print:
-			Token p = nextToken(); // eat print
-			if (p.type == Token.t_str) {
-				String unquote = p.value.substring(1, p.value.length() - 1);
-				unquote = unquote.replaceAll("_", " ");
-				System.out.println(unquote);
-				nextToken();
-			} else {
-				double printValue = e(ctx);
-				if ((printValue == Math.floor(printValue)) && !Double.isInfinite(printValue)) {
-				    long val = (long)printValue;
-				    System.out.println(val);
-				}
-				else
-					System.out.println(printValue);
-			}
+			stPrint(ctx);
 			break;
 		default:
-			System.out.println("Unknown token " + tok.value);
+			System.out.println("Unexpected token " + tok.value);
+		}
+	}
+
+	protected void stPrint(Context ctx) {
+		Token p = nextToken(); // eat print
+		if (p.type == Token.t_str) {
+			String unquote = p.value.substring(1, p.value.length() - 1);
+			unquote = unquote.replaceAll("_", " ");
+			System.out.println(unquote);
+			nextToken();
+		} else {
+			double printValue = e(ctx);
+			if ((printValue == Math.floor(printValue)) && !Double.isInfinite(printValue)) {
+			    long val = (long)printValue;
+			    System.out.println(val);
+			}
+			else
+				System.out.println(printValue);
 		}
 	}
 
@@ -156,11 +160,11 @@ public class Interpreter {
 		ArrayList<String> argList = new ArrayList<>();
 		Token tok = nextToken();
 		for (;;) {
-			if (tok.type == Token.r_bracket)
+			if (tok.type == Token.r_paren)
 				break;
 			argList.add(tok.value);
 			tok = nextToken(); // eat ','
-			if (tok.type == Token.r_bracket)
+			if (tok.type == Token.r_paren)
 				break;
 
 			tok = nextToken();
@@ -182,7 +186,7 @@ public class Interpreter {
 		for (int i = 0; i < args.length; i++) {
 			double arg_value = e(ctx);
 			funContext.setValue(args[i], arg_value);
-			if (getToken().type != Token.r_bracket)
+			if (getToken().type != Token.r_paren)
 				nextToken(); // eat ','
 		}
 		nextToken(); // eat )
@@ -314,7 +318,7 @@ public class Interpreter {
 			nextToken();
 			return not(f(ctx));
 		}
-		if (tok.type == Token.l_bracket) {
+		if (tok.type == Token.l_paren) {
 			nextToken(); // eat '('
 			double res = e(ctx);
 			nextToken(); // eat ')'
