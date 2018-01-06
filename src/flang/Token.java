@@ -40,7 +40,7 @@ class Token {
 	public static boolean isNumber(String s) {
 		boolean result = true;
 		try {
-			Integer.parseInt(s);
+			Double.parseDouble(s);
 		} catch (NumberFormatException e) {
 			result = false;
 		}
