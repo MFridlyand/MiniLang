@@ -6,11 +6,6 @@ import java.util.Map;
 
 public class Interpreter {
 
-	private Map<String, IFunction> functions;
-	private String expr;
-	private Token[] tokens;
-	private int curToken;
-
 	public Interpreter() {
 		functions = new HashMap<>();
 	}
@@ -18,6 +13,24 @@ public class Interpreter {
 	public void registerFunction(String name, IFunction f) {
 		functions.put(name, f);
 	}
+	
+	public void eval(String expr) {
+		this.expr = expr;
+		tokens = Token.tokenize(this.expr);
+		curToken = 0;
+		Context ctx = new Context();
+		for (;;) {
+			Token tok = getToken();
+			if (tok.type == Token.t_end)
+				return;
+			st(ctx);
+		}
+	}
+	
+	private Map<String, IFunction> functions;
+	private String expr;
+	private Token[] tokens;
+	private int curToken;
 
 	protected Token getToken() {
 		return tokens[curToken];
@@ -73,20 +86,18 @@ public class Interpreter {
 			block(ctx);
 			if (ctx.was_return)
 				return;
-			Token t_else = getToken();
-			if (t_else.type != Token.t_else) {
-				return;
+			Token tok = getToken();
+			if (tok.type == Token.t_else) {
+				nextToken();
+				skipBlock();
 			}
-			nextToken();
-			skipBlock();
 		} else {
 			skipBlock();
-			Token t_else = getToken();
-			if (t_else.type != Token.t_else) {
-				return;
+			Token tok = getToken();
+			if (tok.type == Token.t_else) {
+				nextToken();
+				block(ctx);
 			}
-			nextToken();
-			block(ctx);
 		}
 	}
 
@@ -166,7 +177,6 @@ public class Interpreter {
 			tok = nextToken(); // eat ','
 			if (tok.type == Token.r_paren)
 				break;
-
 			tok = nextToken();
 		}
 		nextToken(); // eat )
@@ -284,7 +294,7 @@ public class Interpreter {
 	}
 
 	protected double t(Context ctx) {
-		double f1 = f(ctx);
+		double f1 = atom(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.mul_op) {
@@ -292,7 +302,7 @@ public class Interpreter {
 			}
 
 			nextToken();
-			double f2 = f(ctx);
+			double f2 = atom(ctx);
 			if (tok.value.equals("*"))
 				f1 = f1 * f2;
 			else
@@ -308,15 +318,15 @@ public class Interpreter {
 			return 1;
 	}
 
-	protected double f(Context ctx) {
+	protected double atom(Context ctx) {
 		Token tok = getToken();
 		if (tok.value.equals("-")) {
 			nextToken();
-			return -f(ctx);
+			return -atom(ctx);
 		}
 		if (tok.type == Token.t_not) {
 			nextToken();
-			return not(f(ctx));
+			return not(atom(ctx));
 		}
 		if (tok.type == Token.l_paren) {
 			nextToken(); // eat '('
@@ -332,18 +342,5 @@ public class Interpreter {
 			num = id(ctx);
 		nextToken();
 		return num;
-	}
-
-	public void eval(String expr) {
-		this.expr = expr;
-		tokens = Token.tokenize(this.expr);
-		curToken = 0;
-		Context ctx = new Context();
-		for (;;) {
-			Token tok = getToken();
-			if (tok.type == Token.t_end)
-				return;
-			st(ctx);
-		}
 	}
 }
