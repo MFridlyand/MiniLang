@@ -166,18 +166,15 @@ public class Interpreter {
 	}
 
 	protected void funDef() {
-		String name = nextToken().value;
-		nextToken();// eat (
+		String name = nextToken().value;//eat function and get name
+		nextToken(); //eat name
 		ArrayList<String> argList = new ArrayList<>();
-		Token tok = nextToken();
-		for (;;) {
-			if (tok.type == Token.r_paren)
-				break;
-			argList.add(tok.value);
-			tok = nextToken(); // eat ','
-			if (tok.type == Token.r_paren)
-				break;
-			tok = nextToken();
+		nextToken(); // eat (
+		while (getToken().type != Token.r_paren) {
+			argList.add(getToken().value);
+			nextToken(); // eat arg name
+			if (getToken().type == Token.t_colon)
+				nextToken();
 		}
 		nextToken(); // eat )
 		int offset = getTokenOffset();
