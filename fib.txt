@@ -12,3 +12,23 @@ function fib ( n ) {
 }
 
 print call fib ( 55 )
+
+function pow_r ( num , deg )
+{
+	if deg == 0
+	{
+		return 1
+	}
+	return num * call pow_r ( num , deg - 1 )
+}
+
+function pow ( num , deg )
+{
+	if deg < 0
+	{
+		return 1 / call pow_r ( num , - deg )
+	}
+	return call pow_r ( num , deg )
+}
+
+print call pow ( - 2 , - 5 ) 

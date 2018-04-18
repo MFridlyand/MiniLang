@@ -53,6 +53,17 @@ class Token {
 		return s.startsWith("\"") && s.endsWith("\"");
 	}
 	
+	public static boolean isValidId(String s) {
+		if (s.length() < 1)
+			return false;
+		if (Character.isDigit(s.charAt(0)))
+			return false;
+		if (s.contains(",") || s.contains("(") || s.contains(")") || s.contains("=")
+				|| s.contains("+") || s.contains("-") || s.contains("*") || s.contains("/"))
+			return false;
+		return true;
+	}
+	
 	public static Token[] tokenize(String expr) {
 		String[] data = expr.split("\\s+|\\r+|\\n+");
 		ArrayList<Token> t = new ArrayList<Token>();
@@ -100,8 +111,11 @@ class Token {
 				tok.type = Token.t_str;
 			else if (s.equals("print"))
 				tok.type = Token.t_print;
-			else if (!isNumber(s))
+			else if (!isNumber(s)) {
+				if (!isValidId(s))
+					throw new Error("Invalid id: "+ s);
 				tok.type = Token.t_id;
+			}
 			else
 				tok.type = Token.number;
 			tok.value = s;
