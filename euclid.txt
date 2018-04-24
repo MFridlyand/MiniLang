@@ -30,5 +30,5 @@ print gcd
 print a
 
 print "10s_fib_number:"
-q = call fib ( 40 )
+q = call fib ( 10 )
 print  q

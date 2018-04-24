@@ -29,7 +29,7 @@ public class Main {
 
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\fib.txt")),
+					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\euclid.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.registerFunction("mod", new ModFunction());
