@@ -225,30 +225,28 @@ public class Interpreter {
 
 	protected double e(Context ctx) {
 		double t1 = e1(ctx);
-		boolean result = t1 != 0;
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.or_op)
 				break;
 			eat(Token.or_op);
 			boolean t2 = e1(ctx) != 0;
-			result = result || t2;
+			t1 = t1 != 0 || t2 ? 1 : 0;
 		}
-		return result ? 1 : 0;
+		return t1;
 	}
 
 	protected double e1(Context ctx) {
 		double t1 = e2(ctx);
-		boolean result = t1 != 0;
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.and_op)
 				break;
 			eat(Token.and_op);
 			boolean t2 = e2(ctx) != 0;
-			result = result && t2;
+			t1 = t1 != 0 && t2 ? 1 : 0;
 		}
-		return result ? 1 : 0;
+		return t1;
 	}
 
 	protected double e2(Context ctx) {
