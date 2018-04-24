@@ -91,7 +91,7 @@ public class Interpreter {
 
 	protected void stIf(Context ctx) {
 		eat(Token.t_if);
-		double cond = e(ctx);
+		double cond = expr(ctx);
 		if (cond != 0) {
 			block(ctx);
 			if (ctx.was_return)
@@ -114,13 +114,13 @@ public class Interpreter {
 	protected void stWhile(Context ctx) {
 		eat(Token.t_while); // eat while
 		int token_offset = getTokenOffset();
-		double cond = e(ctx);
+		double cond = expr(ctx);
 		while (cond != 0) {
 			block(ctx);
 			if (ctx.was_return)
 				return;
 			setTokenOffset(token_offset);
-			cond = e(ctx);
+			cond = expr(ctx);
 		}
 		skipBlock();
 	}
@@ -132,7 +132,7 @@ public class Interpreter {
 			String ident = getToken().value;
 			eat(Token.t_id); // eat id
 			eat(Token.t_assign); // eat assign
-			double v = e(ctx);
+			double v = expr(ctx);
 			ctx.setValue(ident, v);
 			break;
 		case Token.t_function:
@@ -140,7 +140,7 @@ public class Interpreter {
 			break;
 		case Token.t_return:
 			eat(Token.t_return); // eat return
-			ctx.return_value = e(ctx);
+			ctx.return_value = expr(ctx);
 			ctx.was_return = true;
 			break;
 		case Token.t_if:
@@ -153,7 +153,7 @@ public class Interpreter {
 			stPrint(ctx);
 			break;
 		default:
-			System.out.println("Unexpected token " + tok.value);
+			throw new Error("Unexpected token " + tok.value);
 		}
 	}
 
@@ -165,7 +165,7 @@ public class Interpreter {
 			System.out.println(unquote);
 			nextToken();
 		} else {
-			double printValue = e(ctx);
+			double printValue = expr(ctx);
 			if ((printValue == Math.floor(printValue)) && !Double.isInfinite(printValue)) {
 			    long val = (long)printValue;
 			    System.out.println(val);
@@ -183,7 +183,7 @@ public class Interpreter {
 		while (getToken().type != Token.r_paren) {
 			argList.add(getToken().value);
 			eat(Token.t_id); // eat arg name
-			if (getToken().type == Token.t_colon)
+			if (getToken().type == Token.t_comma)
 				nextToken();
 		}
 		eat(Token.r_paren); // eat )
@@ -201,10 +201,10 @@ public class Interpreter {
 		Context funContext = new Context();
 		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
-			double arg_value = e(ctx);
+			double arg_value = expr(ctx);
 			funContext.setValue(args[i], arg_value);
 			if (getToken().type != Token.r_paren)
-				eat(Token.t_colon); // eat ','
+				eat(Token.t_comma); // eat ','
 		}
 		eat(Token.r_paren); // eat )
 		if (f instanceof UserFunction) {
@@ -223,7 +223,7 @@ public class Interpreter {
 		return ctx.getValue(id);
 	}
 
-	protected double e(Context ctx) {
+	protected double expr(Context ctx) {
 		double t1 = e1(ctx);
 		for (;;) {
 			Token tok = getToken();
@@ -323,7 +323,7 @@ public class Interpreter {
 		}
 		else if (tok.type == Token.l_paren) {
 			eat(Token.l_paren); // eat '('
-			double res = e(ctx);
+			double res = expr(ctx);
 			eat(Token.r_paren); // eat ')'
 			return res;
 		} else if (tok.type == Token.t_call)

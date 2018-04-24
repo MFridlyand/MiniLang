@@ -28,7 +28,7 @@ class Token {
 	public static final int t_else = 16;
 	public static final int t_while = 17;
 	public static final int t_function = 18;
-	public static final int t_colon = 19;
+	public static final int t_comma = 19;
 	public static final int t_call = 20;
 	public static final int t_return = 21;
 	public static final int t_not = 22;
@@ -100,7 +100,7 @@ class Token {
 			else if (s.equals("function"))
 				tok.type = Token.t_function;
 			else if (s.equals(","))
-				tok.type = Token.t_colon;
+				tok.type = Token.t_comma;
 			else if (s.equals("call"))
 				tok.type = Token.t_call;
 			else if (s.equals("return"))
