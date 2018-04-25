@@ -224,38 +224,38 @@ public class Interpreter {
 	}
 
 	protected double expr(Context ctx) {
-		double t1 = e1(ctx);
+		double t1 = andExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.or_op)
 				break;
 			eat(Token.or_op);
-			boolean t2 = e1(ctx) != 0;
+			boolean t2 = andExpr(ctx) != 0;
 			t1 = t1 != 0 || t2 ? 1 : 0;
 		}
 		return t1;
 	}
 
-	protected double e1(Context ctx) {
-		double t1 = e2(ctx);
+	protected double andExpr(Context ctx) {
+		double t1 = cmpExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.and_op)
 				break;
 			eat(Token.and_op);
-			boolean t2 = e2(ctx) != 0;
+			boolean t2 = cmpExpr(ctx) != 0;
 			t1 = t1 != 0 && t2 ? 1 : 0;
 		}
 		return t1;
 	}
 
-	protected double e2(Context ctx) {
-		double v1 = e3(ctx);
+	protected double cmpExpr(Context ctx) {
+		double v1 = addExpr(ctx);
 		Token tok = getToken();
 		if (tok.type != Token.cmp_op)
 			return v1;
 		eat(Token.cmp_op);
-		double v2 = e3(ctx);
+		double v2 = addExpr(ctx);
 		boolean result = false;
 		if (tok.value.equals(">"))
 			result = v1 > v2;
@@ -268,8 +268,8 @@ public class Interpreter {
 		return result ? 1 : 0;
 	}
 
-	protected double e3(Context ctx) {
-		double t1 = t(ctx);
+	protected double addExpr(Context ctx) {
+		double t1 = mulExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type != Token.add_op) {
@@ -277,7 +277,7 @@ public class Interpreter {
 			}
 
 			eat(Token.add_op);
-			double t2 = t(ctx);
+			double t2 = mulExpr(ctx);
 			if (tok.value.equals("+"))
 				t1 = t1 + t2;
 			else
@@ -286,7 +286,7 @@ public class Interpreter {
 		return t1;
 	}
 
-	protected double t(Context ctx) {
+	protected double mulExpr(Context ctx) {
 		double f1 = atom(ctx);
 		for (;;) {
 			Token tok = getToken();
