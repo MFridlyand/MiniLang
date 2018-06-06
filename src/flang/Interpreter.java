@@ -66,12 +66,15 @@ public class Interpreter {
 
 	protected void skipBlock() {
 		int brackets = 1;
+		ensureToken(Token.l_brace);
 		while (brackets > 0) {
 			Token tok = nextToken();
 			if (tok.type == Token.l_brace)
 				brackets++;
-			if (tok.type == Token.r_brace)
+			else if (tok.type == Token.r_brace)
 				brackets--;
+			else if (tok.type == Token.t_end)
+				throw new Error("Invalid braces sctructure");
 		}
 		eat(Token.r_brace);
 	}
@@ -84,6 +87,8 @@ public class Interpreter {
 				eat(Token.r_brace);
 				return;
 			}
+			if (tok.type == Token.t_end)
+				throw new Error("Invalid braces sctructure");
 			st(ctx);
 			if (ctx.was_return)
 				return;
