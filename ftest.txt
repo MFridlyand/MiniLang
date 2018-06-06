@@ -1,7 +1,7 @@
-a = 5
-b = 2
+var a = 5
+var b = 2
 b = 70
-c = 2 * a + b
+var c = 2 * a + b
 if c > 50 { print c }
 else { if ( a > 4 ) { print 107 } else { print 208 } }
 print ( 50 - 1 ) * 2

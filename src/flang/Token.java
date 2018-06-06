@@ -33,6 +33,7 @@ class Token {
 	public static final int t_return = 21;
 	public static final int t_not = 22;
 	public static final int t_str = 23;
+	public static final int t_var = 24;
 
 	public String value;
 	public int type;
@@ -105,6 +106,8 @@ class Token {
 				tok.type = Token.t_call;
 			else if (s.equals("return"))
 				tok.type = Token.t_return;
+			else if (s.equals("var"))
+				tok.type = Token.t_var;
 			else if (s.equals("!"))
 				tok.type = Token.t_not;
 			else if (isStringLiteral(s))

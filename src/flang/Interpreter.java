@@ -18,7 +18,7 @@ public class Interpreter {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;
-		Context ctx = new Context();
+		Context ctx = new Context(null);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type == Token.t_end)
@@ -135,6 +135,15 @@ public class Interpreter {
 			double v = expr(ctx);
 			ctx.setValue(ident, v);
 			break;
+		case Token.t_var: // process var
+			eat(Token.t_var);
+			String var = getToken().value;
+			ctx.addVar(var, 0.0);
+			eat(Token.t_id); // eat id
+			eat(Token.t_assign); // eat assign
+			double val = expr(ctx);
+			ctx.setValue(var, val);
+			break;
 		case Token.t_function:
 			funDef();
 			break;
@@ -198,11 +207,11 @@ public class Interpreter {
 		eat(Token.t_id);// eat name
 		eat(Token.l_paren);// eat (
 		IFunction f = (IFunction) functions.get(name);
-		Context funContext = new Context();
+		Context funContext = new Context(ctx);
 		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
 			double arg_value = expr(ctx);
-			funContext.setValue(args[i], arg_value);
+			funContext.addVar(args[i], arg_value);
 			if (getToken().type != Token.r_paren)
 				eat(Token.t_comma); // eat ','
 		}
