@@ -18,16 +18,17 @@ public class Interpreter {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;
-		Context ctx = new Context(null);
+		globalContext = new Context(null);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type == Token.t_end)
 				return;
-			st(ctx);
+			st(globalContext);
 		}
 	}
 	
 	private Map<String, IFunction> functions;
+	private Context globalContext;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
@@ -207,7 +208,7 @@ public class Interpreter {
 		eat(Token.t_id);// eat name
 		eat(Token.l_paren);// eat (
 		IFunction f = (IFunction) functions.get(name);
-		Context funContext = new Context(ctx);
+		Context funContext = new Context(globalContext);
 		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
 			double arg_value = expr(ctx);
