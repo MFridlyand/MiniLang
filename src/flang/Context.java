@@ -1,18 +1,20 @@
 package flang;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Context {
 	Map<String, Double> variables;
-	public boolean was_return;
-	public double return_value;
+	public boolean wasReturn;
+	public double returnValue;
 	Context parent;
 
 	Context(Context parent) {
 		variables = new HashMap<>();
-		was_return = false;
+		wasReturn = false;
 		this.parent = parent;
 	}
+
 	public void addVar(String s, double v) {
 		variables.put(s, v);
 	}

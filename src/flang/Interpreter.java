@@ -13,7 +13,7 @@ public class Interpreter {
 	public void registerFunction(String name, IFunction f) {
 		functions.put(name, f);
 	}
-	
+
 	public void eval(String expr) {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
@@ -21,12 +21,12 @@ public class Interpreter {
 		globalContext = new Context(null);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type == Token.t_end)
+			if (tok.type == Token.END)
 				return;
 			st(globalContext);
 		}
 	}
-	
+
 	private Map<String, IFunction> functions;
 	private Context globalContext;
 	private String expr;
@@ -53,12 +53,12 @@ public class Interpreter {
 	protected void setTokenOffset(int value) {
 		curToken = value;
 	}
-	
+
 	protected void ensureToken(int type) {
 		if (getToken().type != type)
 			throw new Error("Unexpected token: " + getToken().value);
 	}
-	
+
 	protected Token eat(int type) {
 		ensureToken(type);
 		return nextToken();
@@ -66,64 +66,64 @@ public class Interpreter {
 
 	protected void skipBlock() {
 		int brackets = 1;
-		ensureToken(Token.l_brace);
+		ensureToken(Token.L_BRACE);
 		while (brackets > 0) {
 			Token tok = nextToken();
-			if (tok.type == Token.l_brace)
+			if (tok.type == Token.L_BRACE)
 				brackets++;
-			else if (tok.type == Token.r_brace)
+			else if (tok.type == Token.R_BRACE)
 				brackets--;
-			else if (tok.type == Token.t_end)
+			else if (tok.type == Token.END)
 				throw new Error("Invalid braces sctructure");
 		}
-		eat(Token.r_brace);
+		eat(Token.R_BRACE);
 	}
 
 	protected void block(Context ctx) {
-		eat(Token.l_brace);
+		eat(Token.L_BRACE);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type == Token.r_brace) {
-				eat(Token.r_brace);
+			if (tok.type == Token.R_BRACE) {
+				eat(Token.R_BRACE);
 				return;
 			}
-			if (tok.type == Token.t_end)
+			if (tok.type == Token.END)
 				throw new Error("Invalid braces sctructure");
 			st(ctx);
-			if (ctx.was_return)
+			if (ctx.wasReturn)
 				return;
 		}
 	}
 
 	protected void stIf(Context ctx) {
-		eat(Token.t_if);
+		eat(Token.IF);
 		double cond = expr(ctx);
 		if (cond != 0) {
 			block(ctx);
-			if (ctx.was_return)
+			if (ctx.wasReturn)
 				return;
 			Token tok = getToken();
-			if (tok.type == Token.t_else) {
-				eat(Token.t_else);
+			if (tok.type == Token.ELSE) {
+				eat(Token.ELSE);
 				skipBlock();
 			}
 		} else {
 			skipBlock();
 			Token tok = getToken();
-			if (tok.type == Token.t_else) {
-				eat(Token.t_else);
+			if (tok.type == Token.ELSE) {
+				eat(Token.ELSE);
 				block(ctx);
 			}
 		}
 	}
 
 	protected void stWhile(Context ctx) {
-		eat(Token.t_while); // eat while
+		eat(Token.WHILE); // eat while
 		int token_offset = getTokenOffset();
 		double cond = expr(ctx);
 		while (cond != 0) {
 			block(ctx);
-			if (ctx.was_return)
+			if (ctx.wasReturn)
 				return;
 			setTokenOffset(token_offset);
 			cond = expr(ctx);
@@ -134,37 +134,37 @@ public class Interpreter {
 	protected void st(Context ctx) {
 		Token tok = getToken();
 		switch (tok.type) {
-		case Token.t_id: // process assignment
+		case Token.ID: // process assignment
 			String ident = getToken().value;
-			eat(Token.t_id); // eat id
-			eat(Token.t_assign); // eat assign
+			eat(Token.ID); // eat id
+			eat(Token.ASSIGN); // eat assign
 			double v = expr(ctx);
 			ctx.setValue(ident, v);
 			break;
-		case Token.t_var: // process var
-			eat(Token.t_var);
+		case Token.VAR: // process var
+			eat(Token.VAR);
 			String var = getToken().value;
 			ctx.addVar(var, 0.0);
-			eat(Token.t_id); // eat id
-			eat(Token.t_assign); // eat assign
+			eat(Token.ID); // eat id
+			eat(Token.ASSIGN); // eat assign
 			double val = expr(ctx);
 			ctx.setValue(var, val);
 			break;
-		case Token.t_function:
+		case Token.FUNCTION:
 			funDef();
 			break;
-		case Token.t_return:
-			eat(Token.t_return); // eat return
-			ctx.return_value = expr(ctx);
-			ctx.was_return = true;
+		case Token.RETURN:
+			eat(Token.RETURN); // eat return
+			ctx.returnValue = expr(ctx);
+			ctx.wasReturn = true;
 			break;
-		case Token.t_if:
+		case Token.IF:
 			stIf(ctx);
 			break;
-		case Token.t_while:
+		case Token.WHILE:
 			stWhile(ctx);
 			break;
-		case Token.t_print:
+		case Token.PRINT:
 			stPrint(ctx);
 			break;
 		default:
@@ -173,8 +173,8 @@ public class Interpreter {
 	}
 
 	protected void stPrint(Context ctx) {
-		Token p = eat(Token.t_print); // eat print
-		if (p.type == Token.t_str) {
+		Token p = eat(Token.PRINT); // eat print
+		if (p.type == Token.STR) {
 			String unquote = p.value.substring(1, p.value.length() - 1);
 			unquote = unquote.replaceAll("_", " ");
 			System.out.println(unquote);
@@ -182,26 +182,25 @@ public class Interpreter {
 		} else {
 			double printValue = expr(ctx);
 			if ((printValue == Math.floor(printValue)) && !Double.isInfinite(printValue)) {
-			    long val = (long)printValue;
-			    System.out.println(val);
-			}
-			else
+				long val = (long) printValue;
+				System.out.println(val);
+			} else
 				System.out.println(printValue);
 		}
 	}
 
 	protected void funDef() {
-		String name = eat(Token.t_function).value;//eat function and get name
-		eat(Token.t_id); //eat name
+		String name = eat(Token.FUNCTION).value;// eat function and get name
+		eat(Token.ID); // eat name
 		ArrayList<String> argList = new ArrayList<>();
-		eat(Token.l_paren); // eat (
-		while (getToken().type != Token.r_paren) {
+		eat(Token.L_PAREN); // eat (
+		while (getToken().type != Token.R_PAREN) {
 			argList.add(getToken().value);
-			eat(Token.t_id); // eat arg name
-			if (getToken().type == Token.t_comma)
+			eat(Token.ID); // eat arg name
+			if (getToken().type == Token.COMMA)
 				nextToken();
 		}
-		eat(Token.r_paren); // eat )
+		eat(Token.R_PAREN); // eat )
 		int offset = getTokenOffset();
 		String[] args = argList.toArray(new String[0]);
 		functions.put(name, new UserFunction(args, offset));
@@ -210,18 +209,18 @@ public class Interpreter {
 
 	protected double funCall(Context ctx) {
 		String name = nextToken().value;
-		eat(Token.t_id);// eat name
-		eat(Token.l_paren);// eat (
+		eat(Token.ID);// eat name
+		eat(Token.L_PAREN);// eat (
 		IFunction f = (IFunction) functions.get(name);
 		Context funContext = new Context(globalContext);
 		String[] args = f.getArgs();
 		for (int i = 0; i < args.length; i++) {
 			double arg_value = expr(ctx);
 			funContext.addVar(args[i], arg_value);
-			if (getToken().type != Token.r_paren)
-				eat(Token.t_comma); // eat ','
+			if (getToken().type != Token.R_PAREN)
+				eat(Token.COMMA); // eat ','
 		}
-		eat(Token.r_paren); // eat )
+		eat(Token.R_PAREN); // eat )
 		if (f instanceof UserFunction) {
 			UserFunction fUser = (UserFunction) f;
 			int tok = getTokenOffset();
@@ -230,7 +229,7 @@ public class Interpreter {
 			setTokenOffset(tok);// jump back
 		} else // built in function
 			f.execute(funContext);
-		return funContext.return_value;
+		return funContext.returnValue;
 	}
 
 	protected double id(Context ctx) {
@@ -242,9 +241,9 @@ public class Interpreter {
 		double t1 = andExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type != Token.or_op)
+			if (tok.type != Token.OR_OP)
 				break;
-			eat(Token.or_op);
+			eat(Token.OR_OP);
 			boolean t2 = andExpr(ctx) != 0;
 			t1 = t1 != 0 || t2 ? 1 : 0;
 		}
@@ -255,9 +254,9 @@ public class Interpreter {
 		double t1 = cmpExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type != Token.and_op)
+			if (tok.type != Token.AND_OP)
 				break;
-			eat(Token.and_op);
+			eat(Token.AND_OP);
 			boolean t2 = cmpExpr(ctx) != 0;
 			t1 = t1 != 0 && t2 ? 1 : 0;
 		}
@@ -267,9 +266,9 @@ public class Interpreter {
 	protected double cmpExpr(Context ctx) {
 		double v1 = addExpr(ctx);
 		Token tok = getToken();
-		if (tok.type != Token.cmp_op)
+		if (tok.type != Token.CMP_OP)
 			return v1;
-		eat(Token.cmp_op);
+		eat(Token.CMP_OP);
 		double v2 = addExpr(ctx);
 		boolean result = false;
 		if (tok.value.equals(">"))
@@ -287,11 +286,11 @@ public class Interpreter {
 		double t1 = mulExpr(ctx);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type != Token.add_op) {
+			if (tok.type != Token.ADD_OP) {
 				break;
 			}
 
-			eat(Token.add_op);
+			eat(Token.ADD_OP);
 			double t2 = mulExpr(ctx);
 			if (tok.value.equals("+"))
 				t1 = t1 + t2;
@@ -305,11 +304,11 @@ public class Interpreter {
 		double f1 = atom(ctx);
 		for (;;) {
 			Token tok = getToken();
-			if (tok.type != Token.mul_op) {
+			if (tok.type != Token.MUL_OP) {
 				break;
 			}
 
-			eat(Token.mul_op);
+			eat(Token.MUL_OP);
 			double f2 = atom(ctx);
 			if (tok.value.equals("*"))
 				f1 = f1 * f2;
@@ -331,20 +330,18 @@ public class Interpreter {
 		if (tok.value.equals("-")) {
 			nextToken();
 			return -atom(ctx);
-		}
-		else if (tok.type == Token.t_not) {
+		} else if (tok.type == Token.NOT) {
 			nextToken();
 			return not(atom(ctx));
-		}
-		else if (tok.type == Token.l_paren) {
-			eat(Token.l_paren); // eat '('
+		} else if (tok.type == Token.L_PAREN) {
+			eat(Token.L_PAREN); // eat '('
 			double res = expr(ctx);
-			eat(Token.r_paren); // eat ')'
+			eat(Token.R_PAREN); // eat ')'
 			return res;
-		} else if (tok.type == Token.t_call)
+		} else if (tok.type == Token.CALL)
 			return funCall(ctx);
 		double num = -1;
-		if (tok.type == Token.number)
+		if (tok.type == Token.NUMBER)
 			num = Double.parseDouble(tok.value);
 		else
 			num = id(ctx);

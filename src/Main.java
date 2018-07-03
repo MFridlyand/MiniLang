@@ -19,7 +19,7 @@ public class Main {
 		public int execute(Context ctx) {
 			int p = (int)ctx.getValue("p");
 			int q = (int)ctx.getValue("q");
-			ctx.return_value = p % q;
+			ctx.returnValue = p % q;
 			return 1;
 		}
 	}
