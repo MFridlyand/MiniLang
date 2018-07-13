@@ -135,20 +135,10 @@ public class Interpreter {
 		Token tok = getToken();
 		switch (tok.type) {
 		case Token.ID: // process assignment
-			String ident = getToken().value;
-			eat(Token.ID); // eat id
-			eat(Token.ASSIGN); // eat assign
-			double v = expr(ctx);
-			ctx.setValue(ident, v);
+			stAssign(ctx);
 			break;
 		case Token.VAR: // process var
-			eat(Token.VAR);
-			String var = getToken().value;
-			ctx.addVar(var, 0.0);
-			eat(Token.ID); // eat id
-			eat(Token.ASSIGN); // eat assign
-			double val = expr(ctx);
-			ctx.setValue(var, val);
+			stVarDef(ctx);
 			break;
 		case Token.FUNCTION:
 			funDef();
@@ -170,6 +160,23 @@ public class Interpreter {
 		default:
 			throw new Error("Unexpected token " + tok.value);
 		}
+	}
+
+	protected void stVarDef(Context ctx) {
+		eat(Token.VAR);
+		String var = getToken().value;
+		eat(Token.ID); // eat id
+		eat(Token.ASSIGN); // eat assign
+		double val = expr(ctx);
+		ctx.addVar(var, val);
+	}
+
+	protected void stAssign(Context ctx) {
+		String ident = getToken().value;
+		eat(Token.ID); // eat id
+		eat(Token.ASSIGN); // eat assign
+		double v = expr(ctx);
+		ctx.setValue(ident, v);
 	}
 
 	protected void stPrint(Context ctx) {
@@ -210,17 +217,8 @@ public class Interpreter {
 	protected double funCall(Context ctx) {
 		String name = nextToken().value;
 		eat(Token.ID);// eat name
-		eat(Token.L_PAREN);// eat (
 		IFunction f = (IFunction) functions.get(name);
-		Context funContext = new Context(globalContext);
-		String[] args = f.getArgs();
-		for (int i = 0; i < args.length; i++) {
-			double arg_value = expr(ctx);
-			funContext.addVar(args[i], arg_value);
-			if (getToken().type != Token.R_PAREN)
-				eat(Token.COMMA); // eat ','
-		}
-		eat(Token.R_PAREN); // eat )
+		Context funContext = prepareCallContext(ctx, f);
 		if (f instanceof UserFunction) {
 			UserFunction fUser = (UserFunction) f;
 			int tok = getTokenOffset();
@@ -230,6 +228,20 @@ public class Interpreter {
 		} else // built in function
 			f.execute(funContext);
 		return funContext.returnValue;
+	}
+
+	protected Context prepareCallContext(Context ctx, IFunction f) {
+		Context funContext = new Context(globalContext);
+		String[] args = f.getArgs();
+		eat(Token.L_PAREN);// eat (
+		for (int i = 0; i < args.length; i++) {
+			double arg_value = expr(ctx);
+			funContext.addVar(args[i], arg_value);
+			if (getToken().type != Token.R_PAREN)
+				eat(Token.COMMA); // eat ','
+		}
+		eat(Token.R_PAREN); // eat )
+		return funContext;
 	}
 
 	protected double id(Context ctx) {
