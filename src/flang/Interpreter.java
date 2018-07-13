@@ -74,7 +74,7 @@ public class Interpreter {
 			else if (tok.type == Token.R_BRACE)
 				brackets--;
 			else if (tok.type == Token.END)
-				throw new Error("Invalid braces sctructure");
+				throw new Error("Invalid braces structure");
 		}
 		eat(Token.R_BRACE);
 	}
@@ -88,7 +88,7 @@ public class Interpreter {
 				return;
 			}
 			if (tok.type == Token.END)
-				throw new Error("Invalid braces sctructure");
+				throw new Error("Invalid braces structure");
 			st(ctx);
 			if (ctx.wasReturn)
 				return;

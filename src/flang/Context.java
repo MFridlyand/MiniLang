@@ -17,7 +17,7 @@ public class Context {
 
 	public void addVar(String s, double v) {
 		if (variables.containsKey(s))
-			throw new Error("Variale " + s + "already exists in current context");
+			throw new Error("Variable " + s + " already exists in current context");
 		variables.put(s, v);
 	}
 
