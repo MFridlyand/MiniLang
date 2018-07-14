@@ -1,0 +1,40 @@
+function make_node ( value , prev_node )
+{
+	var node = call make_array ( 2 )
+	call array_set ( node , 0 , value )
+	call array_set ( node , 1 , prev_node )
+	return node
+}
+
+function print_list ( root )
+{
+	while root != - 1
+	{
+		print call array_get ( root , 0 )
+		root = call array_get ( root , 1 )
+	}
+}
+
+function reverse_list ( root )
+{
+	var newRoot = -1
+	var nextNode = -1
+	while root != - 1
+	{
+		nextNode = call array_get ( root , 1 )
+		call array_set ( root , 1 , newRoot )
+		newRoot = root
+		root = nextNode
+	}
+	return newRoot
+}
+
+var i = 1
+var head = -1
+while i < 15
+{
+	head = call make_node ( i , head )
+	i = i + 1
+}
+call print_list ( head )
+call print_list ( call reverse_list ( head ) )

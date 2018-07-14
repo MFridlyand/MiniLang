@@ -30,7 +30,7 @@ public class Main {
 
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\fib.txt")),
+					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\list.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			ArrayLib arrayLib = new ArrayLib(lang);
