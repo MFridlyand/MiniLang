@@ -33,7 +33,6 @@ public class Main {
 					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\list.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
-			ArrayLib arrayLib = new ArrayLib(lang);
 			lang.registerFunction("mod", new ModFunction());
 			lang.eval(program);
 			System.out.println("done");

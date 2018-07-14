@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import flang.utils.ArrayLib;
+
 public class Interpreter {
 
 	public Interpreter() {
 		functions = new HashMap<>();
+		new ArrayLib(this);
 	}
 
 	public void registerFunction(String name, IFunction f) {
