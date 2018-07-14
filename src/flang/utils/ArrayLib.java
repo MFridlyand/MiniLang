@@ -10,7 +10,7 @@ import flang.Interpreter;
 
 public class ArrayLib {
 	private Map<Double, ArrayList<Double>> arrays = new HashMap<>();
-	int uniqueId = 0;
+	int uniqueId = 1;
 
 	public ArrayLib(Interpreter interpreter) {
 		interpreter.registerFunction("make_array", new MakeArray());

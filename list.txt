@@ -8,7 +8,7 @@ function make_node ( value , prev_node )
 
 function print_list ( root )
 {
-	while root != - 1
+	while root != 0
 	{
 		print call array_get ( root , 0 )
 		root = call array_get ( root , 1 )
@@ -17,9 +17,9 @@ function print_list ( root )
 
 function reverse_list ( root )
 {
-	var newRoot = -1
-	var nextNode = -1
-	while root != - 1
+	var newRoot = 0
+	var nextNode = 0
+	while root != 0
 	{
 		nextNode = call array_get ( root , 1 )
 		call array_set ( root , 1 , newRoot )
@@ -30,7 +30,7 @@ function reverse_list ( root )
 }
 
 var i = 1
-var head = -1
+var head = 0
 while i < 15
 {
 	head = call make_node ( i , head )
