@@ -3,6 +3,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import flang.*;
+import flang.utils.ArrayLib;
 
 public class Main {
 
@@ -29,9 +30,10 @@ public class Main {
 
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\euclid.txt")),
+					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\fib.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			ArrayLib arrayLib = new ArrayLib(lang);
 			lang.registerFunction("mod", new ModFunction());
 			lang.eval(program);
 			System.out.println("done");

@@ -143,6 +143,9 @@ public class Interpreter {
 		case Token.FUNCTION:
 			funDef();
 			break;
+		case Token.CALL:
+			funCall(ctx);
+			break;
 		case Token.RETURN:
 			eat(Token.RETURN); // eat return
 			ctx.returnValue = expr(ctx);
