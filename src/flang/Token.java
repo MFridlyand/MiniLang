@@ -34,6 +34,8 @@ class Token {
 	public static final int NOT = 22;
 	public static final int STR = 23;
 	public static final int VAR = 24;
+	public static final int L_SQ = 25;
+	public static final int R_SQ = 26;
 
 	public String value;
 	public int type;
@@ -114,6 +116,10 @@ class Token {
 				tok.type = Token.STR;
 			else if (string.equals("print"))
 				tok.type = Token.PRINT;
+			else if (string.equals("["))
+				tok.type = Token.L_SQ;
+			else if (string.equals("]"))
+				tok.type = Token.R_SQ;
 			else if (!isNumber(string)) {
 				if (!isValidId(string))
 					throw new Error("Invalid id: " + string);

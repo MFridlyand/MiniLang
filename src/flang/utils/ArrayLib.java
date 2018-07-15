@@ -124,12 +124,12 @@ public class ArrayLib {
 		return id;
 	}
 
-	double arrayGet(double id, int index) {
+	public double arrayGet(double id, int index) {
 		ArrayList<Double> array = arrays.get(id);
 		return array.get(index);
 	}
 
-	void arraySet(double id, int index, double value) {
+	public void arraySet(double id, int index, double value) {
 		ArrayList<Double> array = arrays.get(id);
 		array.set(index, value);
 	}

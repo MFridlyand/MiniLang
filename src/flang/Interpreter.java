@@ -10,7 +10,7 @@ public class Interpreter {
 
 	public Interpreter() {
 		functions = new HashMap<>();
-		new ArrayLib(this);
+		arrayLib = new ArrayLib(this);
 	}
 
 	public void registerFunction(String name, IFunction f) {
@@ -32,9 +32,38 @@ public class Interpreter {
 
 	private Map<String, IFunction> functions;
 	private Context globalContext;
+	private ArrayLib arrayLib;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
+	
+	class LValue{
+		boolean isArray = false;
+		double arrayIndex = -1;
+		Token id;
+		void eval(Context ctx) {
+			ensureToken(Token.ID);
+			id = getToken();
+			if (nextToken().type == Token.L_SQ){
+				isArray = true;
+				putBack();
+				id(ctx);
+				eat(Token.ID);
+				eat(Token.L_SQ);
+				arrayIndex = expr(ctx);
+				eat(Token.R_SQ);
+			}
+		}
+		void assign(double value, Context ctx) {
+			if (isArray) {
+				double idValue = ctx.getValue(id.value);
+				arrayLib.arraySet(idValue, (int) arrayIndex, value);
+			}
+			else {
+				ctx.setValue(id.value, value);
+			}
+		}
+	}
 
 	protected Token getToken() {
 		return tokens[curToken];
@@ -178,11 +207,11 @@ public class Interpreter {
 	}
 
 	protected void stAssign(Context ctx) {
-		String ident = getToken().value;
-		eat(Token.ID); // eat id
+		LValue lvalue = new LValue();
+		lvalue.eval(ctx);
 		eat(Token.ASSIGN); // eat assign
 		double v = expr(ctx);
-		ctx.setValue(ident, v);
+		lvalue.assign(v, ctx);
 	}
 
 	protected void stPrint(Context ctx) {
@@ -342,6 +371,16 @@ public class Interpreter {
 		else
 			return 1;
 	}
+	
+	protected double indexExpr(Context ctx) {
+		double id = id(ctx);
+		eat(Token.ID);
+		eat(Token.L_SQ);
+		double index = expr(ctx);
+		double value = arrayLib.arrayGet(id, (int) index);
+		eat(Token.R_SQ);
+		return value;
+	}
 
 	protected double atom(Context ctx) {
 		Token tok = getToken();
@@ -359,11 +398,17 @@ public class Interpreter {
 		} else if (tok.type == Token.CALL)
 			return funCall(ctx);
 		double num = -1;
-		if (tok.type == Token.NUMBER)
+		if (tok.type == Token.NUMBER) {
 			num = Double.parseDouble(tok.value);
-		else
+			nextToken();
+		} else if (nextToken().type == Token.L_SQ){
+			putBack();
+			num = indexExpr(ctx);
+		}else {
+			putBack();
 			num = id(ctx);
-		nextToken();
+			eat(Token.ID);
+		}		
 		return num;
 	}
 }

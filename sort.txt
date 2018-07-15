@@ -1,0 +1,49 @@
+function sort ( a )
+{
+	var sz = call array_size ( a )
+	if sz < 2
+	{
+		return 0
+	}
+	var i = 0
+	var j = 0
+	var t = 0
+	while i < sz
+	{
+		j = i + 1
+		while j < sz
+		{
+			if a [ j ] < a [ i ]
+			{
+				t = a [ i ]
+				a [ i ] = a [ j ]
+				a [ j ] = t
+			}
+			j = j + 1
+		}		
+		i = i + 1
+	}
+}
+function printArray ( a )
+{
+	var sz = call array_size ( a )
+	var i = 0
+	while i < sz
+	{
+		print a [ i ]
+		i = i + 1
+	}
+}
+
+var data = call make_array ( 0 )
+call array_add ( data , 10 )
+call array_add ( data , 4 )
+call array_add ( data , 5 )
+call array_add ( data , -5 )
+call array_add ( data , 1 )
+call array_add ( data , 2 )
+call array_add ( data , 3 )
+
+call printArray ( data )
+call sort ( data )
+call printArray ( data )
