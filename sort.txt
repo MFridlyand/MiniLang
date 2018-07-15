@@ -46,4 +46,5 @@ call array_add ( data , 3 )
 
 call printArray ( data )
 call sort ( data )
+print "sorted:"
 call printArray ( data )

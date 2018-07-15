@@ -38,24 +38,21 @@ public class Interpreter {
 	private int curToken;
 	
 	class LValue{
-		boolean isArray = false;
+		boolean isIndexExpr = false;
 		double arrayIndex = -1;
 		Token id;
 		void eval(Context ctx) {
 			ensureToken(Token.ID);
 			id = getToken();
 			if (nextToken().type == Token.L_SQ){
-				isArray = true;
-				putBack();
-				id(ctx);
-				eat(Token.ID);
+				isIndexExpr = true;
 				eat(Token.L_SQ);
 				arrayIndex = expr(ctx);
 				eat(Token.R_SQ);
 			}
 		}
 		void assign(double value, Context ctx) {
-			if (isArray) {
+			if (isIndexExpr) {
 				double idValue = ctx.getValue(id.value);
 				arrayLib.arraySet(idValue, (int) arrayIndex, value);
 			}
