@@ -14,8 +14,8 @@ public class ArrayLib {
 
 	public ArrayLib(Interpreter interpreter) {
 		interpreter.registerFunction("make_array", new MakeArray());
-		interpreter.registerFunction("array_get", new ArrayGet());
-		interpreter.registerFunction("array_set", new ArraySet());
+		interpreter.registerFunction("array_copy", new ArrayCopy());
+		interpreter.registerFunction("array_free", new ArrayFree());
 		interpreter.registerFunction("array_size", new ArraySize());
 		interpreter.registerFunction("array_add", new ArrayAdd());
 	}
@@ -113,6 +113,43 @@ public class ArrayLib {
 			return 0;
 		}
 	}
+	
+	class ArrayCopy implements IFunction {
+
+		String[] args = { "id" };
+
+		@Override
+		public String[] getArgs() {
+			// TODO Auto-generated method stub
+			return args;
+		}
+
+		@Override
+		public int execute(Context ctx) {
+			double id = ctx.getValue("id");
+			ctx.returnValue = copyArray(id);
+			return 0;
+		}
+	}
+	
+	class ArrayFree implements IFunction {
+
+		String[] args = { "id" };
+
+		@Override
+		public String[] getArgs() {
+			// TODO Auto-generated method stub
+			return args;
+		}
+
+		@Override
+		public int execute(Context ctx) {
+			double id = ctx.getValue("id");
+			freeArray(id);
+			ctx.returnValue = 0;
+			return 0;
+		}
+	}
 
 	double makeArray(int size) {
 		ArrayList<Double> array = new ArrayList<>(size);
@@ -122,6 +159,21 @@ public class ArrayLib {
 		arrays.put(id, array);
 		uniqueId++;
 		return id;
+	}
+	
+	double copyArray(double id) {
+		ArrayList<Double> array = arrays.get(id);
+		ArrayList<Double> copy = new ArrayList<>();
+		for (int i = 0; i < array.size(); i++)
+			copy.add(array.get(i).doubleValue());
+		double newid = uniqueId;
+		arrays.put(newid, copy);
+		uniqueId++;
+		return newid;
+	}
+	
+	void freeArray(double id) {
+		arrays.remove(id);
 	}
 
 	public double arrayGet(double id, int index) {
