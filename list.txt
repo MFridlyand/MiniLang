@@ -15,6 +15,17 @@ function print_list ( root )
 	}
 }
 
+function copy_list ( root )
+{
+	if root == 0
+	{
+		return 0
+	}
+	var copy = call array_copy ( root )
+	copy [ 1 ] = call copy_list ( root [ 1 ] )
+	return copy
+}
+
 function reverse_list ( root )
 {
 	var newRoot = 0
@@ -37,4 +48,6 @@ while i < 15
 	i = i + 1
 }
 call print_list ( head )
+var copy = call copy_list ( head )
 call print_list ( call reverse_list ( head ) )
+call print_list ( copy )

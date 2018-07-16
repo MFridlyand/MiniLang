@@ -44,7 +44,7 @@ var sz = call array_size ( squares )
 i = 0
 while i < sz 
 {
-   print call array_get ( squares , i )
+   print  squares [ i ]
    i = i + 1
 }
 
