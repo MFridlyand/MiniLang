@@ -151,7 +151,7 @@ public class ArrayLib {
 		}
 	}
 
-	double makeArray(int size) {
+	public double makeArray(int size) {
 		ArrayList<Double> array = new ArrayList<>(size);
 		for (int i = 0; i < size; i++)
 			array.add(0.0);
@@ -170,6 +170,10 @@ public class ArrayLib {
 		arrays.put(newid, copy);
 		uniqueId++;
 		return newid;
+	}
+	
+	public ArrayList<Double> getArray(double id){
+		return arrays.get(id);
 	}
 	
 	void freeArray(double id) {

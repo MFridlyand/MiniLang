@@ -1,5 +1,6 @@
 package flang;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,11 +9,13 @@ public class Context {
 	public boolean wasReturn;
 	public double returnValue;
 	Context parent;
+	Interpreter interpreter;
 
-	Context(Context parent) {
+	Context(Context parent, Interpreter interpreter) {
 		variables = new HashMap<>();
 		wasReturn = false;
 		this.parent = parent;
+		this.interpreter = interpreter;
 	}
 
 	public void addVar(String s, double v) {
@@ -30,6 +33,14 @@ public class Context {
 			parent.setValue(s, v);
 		else
 			throw new Error("Undefined variable: " + s);
+	}
+	
+	public double makeArray(int size) {
+		return interpreter.arrayLib.makeArray(size);
+	}
+	
+	public ArrayList<Double> getArray(double id) {
+		return interpreter.arrayLib.getArray(id);
 	}
 
 	public double getValue(String s) {

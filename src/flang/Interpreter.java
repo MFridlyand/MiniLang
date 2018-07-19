@@ -21,7 +21,7 @@ public class Interpreter {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;
-		globalContext = new Context(null);
+		globalContext = new Context(null, this);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type == Token.END)
@@ -32,12 +32,12 @@ public class Interpreter {
 
 	private Map<String, IFunction> functions;
 	private Context globalContext;
-	private ArrayLib arrayLib;
+	ArrayLib arrayLib;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
 	
-	class LValue{
+	private class LValue{
 		boolean isIndexExpr = false;
 		double arrayIndex = -1;
 		Token id;
@@ -263,7 +263,7 @@ public class Interpreter {
 	}
 
 	protected Context prepareCallContext(Context ctx, IFunction f) {
-		Context funContext = new Context(globalContext);
+		Context funContext = new Context(globalContext, this);
 		String[] args = f.getArgs();
 		eat(Token.L_PAREN);// eat (
 		for (int i = 0; i < args.length; i++) {
