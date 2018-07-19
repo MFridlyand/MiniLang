@@ -24,6 +24,74 @@ function sort ( a )
 		i = i + 1
 	}
 }
+
+function qsort ( a )
+{
+	var sz = call array_size ( a )
+	if sz < 2
+	{
+		return a
+	}
+	var ls = call make_array ( 0 )
+	var eq = call make_array ( 0 )
+	var gt = call make_array ( 0 )
+	var i = 0
+	while i < sz
+	{
+		if a [ i ] < a [ 0 ]
+		{
+			call array_add ( ls , a [ i ] )
+		} 
+		else
+		{
+			if a [ i ] > a [ 0 ]
+			{
+				call array_add ( gt , a [ i ] ) 
+			}
+			else
+			{
+				call array_add ( eq , a [ i ] ) 
+			}
+		}
+		i = i + 1
+	}
+	
+	var sorted_ls = call qsort ( ls )
+	var ls_sz = call array_size ( sorted_ls )
+
+	i = 0
+	var index = 0
+	while i < ls_sz
+	{
+		a [ index ] = sorted_ls [ i ] 
+		i = i + 1
+		index = index + 1
+	}
+
+	var eq_sz = call array_size ( eq )
+	i = 0
+	while i < eq_sz
+	{
+		a [ index ] = eq [ i ] 
+		i = i + 1
+		index = index + 1
+	}
+
+	var sorted_gt = call qsort ( gt )
+	var gt_sz = call array_size ( sorted_gt )
+	i = 0
+	while i < gt_sz
+	{
+		a [ index ] = sorted_gt [ i ] 
+		i = i + 1
+		index = index + 1
+	}
+	call array_free ( ls )
+	call array_free ( eq )
+	call array_free ( gt )
+	return a
+}
+
 function printArray ( a )
 {
 	var sz = call array_size ( a )
@@ -45,6 +113,6 @@ call array_add ( data , 2 )
 call array_add ( data , 3 )
 
 call printArray ( data )
-call sort ( data )
+call qsort ( data )
 print "sorted:"
 call printArray ( data )
