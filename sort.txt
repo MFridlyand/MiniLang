@@ -56,14 +56,14 @@ function qsort ( a )
 		i = i + 1
 	}
 	
-	var sorted_ls = call qsort ( ls )
-	var ls_sz = call array_size ( sorted_ls )
+	call qsort ( ls )
+	var ls_sz = call array_size ( ls )
 
 	i = 0
 	var index = 0
 	while i < ls_sz
 	{
-		a [ index ] = sorted_ls [ i ] 
+		a [ index ] = ls [ i ] 
 		i = i + 1
 		index = index + 1
 	}
@@ -77,12 +77,12 @@ function qsort ( a )
 		index = index + 1
 	}
 
-	var sorted_gt = call qsort ( gt )
-	var gt_sz = call array_size ( sorted_gt )
+	call qsort ( gt )
+	var gt_sz = call array_size ( gt )
 	i = 0
 	while i < gt_sz
 	{
-		a [ index ] = sorted_gt [ i ] 
+		a [ index ] = gt [ i ] 
 		i = i + 1
 		index = index + 1
 	}
