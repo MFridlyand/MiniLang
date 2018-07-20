@@ -3,7 +3,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import flang.*;
-import flang.utils.ArrayLib;
 
 public class Main {
 
