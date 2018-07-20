@@ -1,37 +1,3 @@
-var a = 12
-var b = 15
-function fib ( n )
-{
-  if n == 0
-  {
-	return 0
-  }
-  if n == 1
-  {
-   return 1
-  }
-	a = - 140
-  return call fib ( n - 1 ) + call fib ( n - 2 )
-}
-
-function fib2 ( n )
-{
-   var f0 = 0
-	 var f1 = 1
-	 var i = 1
-	 var f_n = 0
-	 if  n  == 1 {
-	 	return 1
-	 }
-	 while i < n
-	 {
-		  f_n = f0 + f1
-			f0 = f1
-			f1 = f_n
-			i = i + 1
-	 }
-	 return f_n
-}
 
 function gcd ( m , n )
 {
@@ -47,9 +13,5 @@ function gcd ( m , n )
 print "gcd_100_and_40"
 var gcd = call gcd ( 100 , 40 )
 print gcd
-print a
 
-print "10s_fib_number:"
-var q = call fib2 ( 50 )
-print  q
-print a
+

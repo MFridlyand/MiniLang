@@ -10,7 +10,7 @@ function fib_r ( n , f1 , f2 )
 function fib ( n ) {
 	return call fib_r ( n , 0 , 1 )
 }
-
+print "fibonacci_number_55"
 print call fib ( 55 )
 
 function pow_r ( num , deg )
@@ -30,23 +30,5 @@ function pow ( num , deg )
 	}
 	return call pow_r ( num , deg )
 }
-
-var squares = call make_array ( 0 )
-var i = 1
-while i < 16 
-{
-   call array_add ( squares , i * i )
-   i = i + 1
-}
-
-
-var sz = call array_size ( squares )
-i = 0
-while i < sz 
-{
-   print  squares [ i ]
-   i = i + 1
-}
-
 
 print call pow ( - 2 , - 5 ) 

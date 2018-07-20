@@ -67,10 +67,24 @@ call array_add ( data , 1 )
 call array_add ( data , 2 )
 call array_add ( data , 3 )
 
-call printArray ( data )
 call sort ( data )
-print "sorted:"
-call printArray ( data )
+
+var sz = call array_size ( data )
+var i = 0
+while i < sz
+{
+    print data [ i ]
+    i = i + 1
+}
+
+Output :
+-5
+1
+2
+3
+4
+5
+10
 
 This example demonstrates the implementation of sorting an array by a simple selection method. The input array is passed by reference,
 var keyword is used to declare a variable. return keyword is used to break function execution and return a value from function.
