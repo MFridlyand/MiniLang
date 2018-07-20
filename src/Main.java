@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\fib.txt")),
+					Files.readAllBytes(Paths.get(args[0])),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);
