@@ -1,4 +1,5 @@
 And so before you the simplest programming language, originally written for tutoring purposes. The language supports:
+    * arithmetical and logical expressions
     * basic algorithmic constructs ( if while )
     * local and global variables of the type double
     * arrays
@@ -67,7 +68,7 @@ call array_add ( data , 2 )
 call array_add ( data , 3 )
 
 call printArray ( data )
-call qsort ( data )
+call sort ( data )
 print "sorted:"
 call printArray ( data )
 
@@ -75,6 +76,7 @@ This example demonstrates the implementation of sorting an array by a simple sel
 var keyword is used to declare a variable. return keyword is used to break function execution and return a value from function.
 The following built-in functions are defined to work with arrays in the language:
     * make_array ( size ) - creates an array with a specified size
+    * array_size ( array ) - returns array size
     * array_add ( array , value ) - adds an element to the array
     * array_copy ( array ) - copies an array
     * array_free ( array ) - frees the memory allocated for the array
