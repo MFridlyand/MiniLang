@@ -17,7 +17,7 @@ class Test1 {
 	void test() {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\fib.txt")),
+					Files.readAllBytes(Paths.get("samples//fib.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);
@@ -33,7 +33,7 @@ class Test1 {
 	void test1() {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\sort.txt")),
+					Files.readAllBytes(Paths.get("samples//sort.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);
@@ -49,7 +49,7 @@ class Test1 {
 	void test2() {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\list.txt")),
+					Files.readAllBytes(Paths.get("samples//list.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);
@@ -65,7 +65,7 @@ class Test1 {
 	void test3() {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\euclid.txt")),
+					Files.readAllBytes(Paths.get("samples//euclid.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);
@@ -81,7 +81,7 @@ class Test1 {
 	void test4() {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("D:\\misha\\src\\hackerrank\\MiniLang\\ftest2.txt")),
+					Files.readAllBytes(Paths.get("samples//ftest2.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.eval(program);

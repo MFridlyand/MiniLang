@@ -1,4 +1,3 @@
-
 function gcd ( m , n )
 {
 	while  m != n 
@@ -13,5 +12,3 @@ function gcd ( m , n )
 print "gcd_100_and_40"
 var gcd = call gcd ( 100 , 40 )
 print gcd
-
-

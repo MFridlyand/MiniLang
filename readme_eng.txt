@@ -1,4 +1,4 @@
-And so before you the simplest programming language, originally written for tutoring purposes. The language supports:
+And so before you the very simple programming language, originally written for tutoring purposes. The language supports:
     * arithmetical and logical expressions
     * basic algorithmic constructs ( if while )
     * local and global variables of the type double
