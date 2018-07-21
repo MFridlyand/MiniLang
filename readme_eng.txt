@@ -5,7 +5,7 @@ And so before you the very simple programming language, originally written for t
     * arrays
     * user defined functions and recursion
     * possibility to extend functionality by adding built-in functions
-    The main purpose of the writing this language is to have the simplest implementation possible , there is no AST built, no byte code is generated.
+    The main purpose behind writing this language is to have the simplest implementation possible , there is no AST built, no byte code is generated.
 The input stream is divided into tokens by the simplest lexer, then recursive descent algorithm is used to perform all the computations.
 Let's take a look at a few examples:
 
@@ -95,5 +95,5 @@ The following built-in functions are defined to work with arrays in the language
     * array_copy ( array ) - copies an array
     * array_free ( array ) - frees the memory allocated for the array
 
-Despite its simplicity, the language is turing complete, you can find other examples in examples folder, in particular, an example of the 
+Despite its simplicity, the language is turing complete, you can find other examples in examples folder, including an example of the 
 linked list implementation.
