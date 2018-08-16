@@ -92,4 +92,20 @@ class Test1 {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	void test5() {
+		try {
+			String program = new String(
+					Files.readAllBytes(Paths.get("samples//ftest.txt")),
+					StandardCharsets.UTF_8);
+			Interpreter lang = new Interpreter();
+			lang.eval(program);
+			System.out.println("done");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
 }
