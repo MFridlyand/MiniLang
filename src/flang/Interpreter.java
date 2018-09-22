@@ -21,7 +21,7 @@ public class Interpreter {
 		this.expr = expr;
 		tokens = Token.tokenize(this.expr);
 		curToken = 0;
-		globalContext = new Context(null, this);
+		globalContext = new Context(null, arrayLib);
 		for (;;) {
 			Token tok = getToken();
 			if (tok.type == Token.END)
@@ -263,7 +263,7 @@ public class Interpreter {
 	}
 
 	protected Context prepareCallContext(Context ctx, IFunction f) {
-		Context funContext = new Context(globalContext, this);
+		Context funContext = new Context(globalContext, arrayLib);
 		String[] args = f.getArgs();
 		eat(Token.L_PAREN);// eat (
 		for (int i = 0; i < args.length; i++) {

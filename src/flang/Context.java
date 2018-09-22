@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import flang.utils.ArrayLib;
+
 public class Context {
 	Map<String, Double> variables;
 	public boolean wasReturn;
 	public double returnValue;
 	Context parent;
-	Interpreter interpreter;
+	ArrayLib arrayLib;
 
-	Context(Context parent, Interpreter interpreter) {
+	Context(Context parent, ArrayLib arrayLib) {
 		variables = new HashMap<>();
 		wasReturn = false;
 		this.parent = parent;
-		this.interpreter = interpreter;
+		this.arrayLib = arrayLib;
 	}
 
 	public void addVar(String s, double v) {
@@ -36,11 +38,11 @@ public class Context {
 	}
 	
 	public double makeArray(int size) {
-		return interpreter.arrayLib.makeArray(size);
+		return arrayLib.makeArray(size);
 	}
 	
 	public ArrayList<Double> getArray(double id) {
-		return interpreter.arrayLib.getArray(id);
+		return arrayLib.getArray(id);
 	}
 
 	public double getValue(String s) {
