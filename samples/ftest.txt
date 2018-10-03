@@ -1,5 +1,10 @@
 var a = 5
 var b = 2
+function ppp ( )
+{
+ print a
+}
+call ppp ( )
 b = 70
 var c = 2 * a + b
 if c > 50 { print c }

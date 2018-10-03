@@ -46,7 +46,12 @@ public class Context {
 	}
 
 	public double getValue(String s) {
-		double v = variables.get(s);
-		return v;
+		Double v = variables.get(s);
+		if (v != null)
+			return v.doubleValue();
+		if (parent != null)
+			return parent.getValue(s);
+		else
+			throw new Error("Undefined variable: " + s);
 	}
 }
