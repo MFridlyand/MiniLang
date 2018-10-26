@@ -32,7 +32,7 @@ public class Interpreter {
 
 	private Map<String, IFunction> functions;
 	private Context globalContext;
-	ArrayLib arrayLib;
+	private ArrayLib arrayLib;
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
@@ -333,7 +333,6 @@ public class Interpreter {
 			if (tok.type != Token.ADD_OP) {
 				break;
 			}
-
 			eat(Token.ADD_OP);
 			double t2 = mulExpr(ctx);
 			if (tok.value.equals("+"))
@@ -351,7 +350,6 @@ public class Interpreter {
 			if (tok.type != Token.MUL_OP) {
 				break;
 			}
-
 			eat(Token.MUL_OP);
 			double f2 = atom(ctx);
 			if (tok.value.equals("*"))
