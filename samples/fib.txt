@@ -11,7 +11,9 @@ function fib ( n ) {
 	return call fib_r ( n , 0 , 1 )
 }
 print "fibonacci_number_55"
-print call fib ( 55 )
+var fib = call fib ( 55 ) 
+print fib
+call assert ( 139583862445 ==  fib )
 
 function pow_r ( num , deg )
 {

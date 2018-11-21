@@ -1,5 +1,6 @@
 package tests;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 import flang.Interpreter;
+import flang.utils.Assertion;
 
 class Test1 {
 
@@ -20,12 +22,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//fib.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -36,12 +40,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//sort.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -52,12 +58,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//list.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -68,12 +76,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//euclid.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -84,12 +94,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//ftest2.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -100,12 +112,14 @@ class Test1 {
 					Files.readAllBytes(Paths.get("samples//ftest.txt")),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			fail();
 		}
 	}
 }
