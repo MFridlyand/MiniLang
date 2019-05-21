@@ -17,9 +17,13 @@ class Test1 {
 
 	@Test
 	void test() {
+		check("samples//fib.txt");
+	}
+
+	protected void check(String path) {
 		try {
 			String program = new String(
-					Files.readAllBytes(Paths.get("samples//fib.txt")),
+					Files.readAllBytes(Paths.get(path)),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
 			lang.registerFunction("assert", new Assertion());
@@ -35,91 +39,26 @@ class Test1 {
 	
 	@Test
 	void test1() {
-		try {
-			String program = new String(
-					Files.readAllBytes(Paths.get("samples//sort.txt")),
-					StandardCharsets.UTF_8);
-			Interpreter lang = new Interpreter();
-			lang.registerFunction("assert", new Assertion());
-			lang.eval(program);
-			System.out.println("done");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			fail();
-		}
+		check("samples//sort.txt");
 	}
 	
 	@Test
 	void test2() {
-		try {
-			String program = new String(
-					Files.readAllBytes(Paths.get("samples//list.txt")),
-					StandardCharsets.UTF_8);
-			Interpreter lang = new Interpreter();
-			lang.registerFunction("assert", new Assertion());
-			lang.eval(program);
-			System.out.println("done");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			fail();
-		}
+		check("samples//list.txt");
 	}
 	
 	@Test
 	void test3() {
-		try {
-			String program = new String(
-					Files.readAllBytes(Paths.get("samples//euclid.txt")),
-					StandardCharsets.UTF_8);
-			Interpreter lang = new Interpreter();
-			lang.registerFunction("assert", new Assertion());
-			lang.eval(program);
-			System.out.println("done");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			fail();
-		}
+		check("samples//euclid.txt");
 	}
 	
 	@Test
 	void test4() {
-		try {
-			String program = new String(
-					Files.readAllBytes(Paths.get("samples//ftest2.txt")),
-					StandardCharsets.UTF_8);
-			Interpreter lang = new Interpreter();
-			lang.registerFunction("assert", new Assertion());
-			lang.eval(program);
-			System.out.println("done");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			fail();
-		}
+		check("samples//ftest2.txt");
 	}
 	
 	@Test
 	void test5() {
-		try {
-			String program = new String(
-					Files.readAllBytes(Paths.get("samples//ftest.txt")),
-					StandardCharsets.UTF_8);
-			Interpreter lang = new Interpreter();
-			lang.registerFunction("assert", new Assertion());
-			lang.eval(program);
-			System.out.println("done");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			fail();
-		}
+		check("samples//ftest.txt");
 	}
 }
