@@ -2,6 +2,7 @@ var a = 5
 var b = 2
 function ppp ( )
 {
+ b = 3
  print a
 }
 call ppp ( )
