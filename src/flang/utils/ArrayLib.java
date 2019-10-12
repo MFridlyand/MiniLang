@@ -38,45 +38,6 @@ public class ArrayLib {
 		}
 	}
 
-	class ArrayGet implements IFunction {
-
-		String[] args = { "id", "index" };
-
-		@Override
-		public String[] getArgs() {
-			// TODO Auto-generated method stub
-			return args;
-		}
-
-		@Override
-		public int execute(Context ctx) {
-			double id = ctx.getValue("id");
-			double index = ctx.getValue("index");
-			ctx.returnValue = arrayGet(id, (int) index);
-			return 0;
-		}
-	}
-
-	class ArraySet implements IFunction {
-
-		String[] args = { "id", "index", "value" };
-
-		@Override
-		public String[] getArgs() {
-			// TODO Auto-generated method stub
-			return args;
-		}
-
-		@Override
-		public int execute(Context ctx) {
-			double id = ctx.getValue("id");
-			double index = ctx.getValue("index");
-			double value = ctx.getValue("value");
-			arraySet(id, (int) index, value);
-			return 0;
-		}
-	}
-
 	class ArraySize implements IFunction {
 
 		String[] args = { "id" };
