@@ -392,6 +392,11 @@ public class Interpreter {
 			return res;
 		} else if (tok.type == Token.CALL)
 			return funCall(ctx);
+		return value(ctx);
+	}
+
+	protected double value(Context ctx) {
+		Token tok = getToken();
 		double num = -1;
 		if (tok.type == Token.NUMBER) {
 			num = Double.parseDouble(tok.value);
