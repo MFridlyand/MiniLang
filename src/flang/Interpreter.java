@@ -250,6 +250,8 @@ public class Interpreter {
 		String name = nextToken().value;
 		eat(Token.ID);// eat name
 		IFunction f = (IFunction) functions.get(name);
+		if (f == null)
+			throw new Error("Unknown function: " + name);
 		Context funContext = prepareCallContext(ctx, f);
 		if (f instanceof UserFunction) {
 			UserFunction fUser = (UserFunction) f;
