@@ -36,27 +36,28 @@ public class Interpreter {
 	private String expr;
 	private Token[] tokens;
 	private int curToken;
-	
-	private class LValue{
+
+	private class LValue {
 		boolean isIndexExpr = false;
 		double arrayIndex = -1;
 		Token id;
+
 		void eval(Context ctx) {
 			ensureToken(Token.ID);
 			id = getToken();
-			if (nextToken().type == Token.L_SQ){
+			if (nextToken().type == Token.L_SQ) {
 				isIndexExpr = true;
 				eat(Token.L_SQ);
 				arrayIndex = expr(ctx);
 				eat(Token.R_SQ);
 			}
 		}
+
 		void assign(double value, Context ctx) {
 			if (isIndexExpr) {
 				double idValue = ctx.getValue(id.value);
 				arrayLib.arraySet(idValue, (int) arrayIndex, value);
-			}
-			else {
+			} else {
 				ctx.setValue(id.value, value);
 			}
 		}
@@ -368,7 +369,7 @@ public class Interpreter {
 		else
 			return 1;
 	}
-	
+
 	protected double indexExpr(Context ctx) {
 		double id = id(ctx);
 		eat(Token.ID);
@@ -403,14 +404,14 @@ public class Interpreter {
 		if (tok.type == Token.NUMBER) {
 			num = Double.parseDouble(tok.value);
 			nextToken();
-		} else if (nextToken().type == Token.L_SQ){
+		} else if (nextToken().type == Token.L_SQ) {
 			putBack();
 			num = indexExpr(ctx);
-		}else {
+		} else {
 			putBack();
 			num = id(ctx);
 			eat(Token.ID);
-		}		
+		}
 		return num;
 	}
 }

@@ -3,6 +3,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import flang.*;
+import flang.utils.Assertion;
 
 public class Main {
 
@@ -12,6 +13,7 @@ public class Main {
 					Files.readAllBytes(Paths.get(args[0])),
 					StandardCharsets.UTF_8);
 			Interpreter lang = new Interpreter();
+			lang.registerFunction("assert", new Assertion());
 			lang.eval(program);
 			System.out.println("done");
 		} catch (IOException e) {
