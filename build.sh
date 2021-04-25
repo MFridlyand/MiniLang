@@ -1,4 +1,5 @@
 cd src
-javac -d ../build *.java
-cd ../build
+javac -d ../bin *.java
+cd ../bin
 jar cfe Minilang.jar Main Main.class *
+cd ..
