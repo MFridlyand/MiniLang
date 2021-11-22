@@ -30,7 +30,7 @@ print call gcd ( 100 , 40 )
 Output: 20
 ```
 Here we define a function that computes the GCD of two numbers, using the Euclidean algorithm, the arguments are passed by value.
-call keyword is specified before function name to perform a function call. Note that the tokens are separated from each other by spaces and line breaks
+`call` keyword is specified before function name to perform a function call. Note that the tokens are separated from each other by spaces and line breaks
 
 Example 2:
 
@@ -91,7 +91,7 @@ Output :
 10
 ```
 This example demonstrates the implementation of sorting an array by a simple selection method. The input array is passed by reference,
-var keyword is used to declare a variable. return keyword is used to break function execution and return a value from function.
+`var` keyword is used to declare a variable. `return` keyword is used to break function execution and return a value from function.
 The following built-in functions are defined to work with arrays in the language:
 * make_array ( size ) - creates an array with a specified size
 * array_size ( array ) - returns array size
