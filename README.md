@@ -99,5 +99,5 @@ The following built-in functions are defined to work with arrays in the language
 * array_copy ( array ) - copies an array
 * array_free ( array ) - frees the memory allocated for the array
 
-Despite its simplicity, the language is turing complete, you can find other examples in examples folder, including an example of the 
+Despite its simplicity, the language is turing complete, you can find other examples in samples folder, including an example of the 
 linked list implementation.
