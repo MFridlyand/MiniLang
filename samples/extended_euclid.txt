@@ -1,0 +1,71 @@
+function make_pair ( a , b )
+{
+    var t = call make_array ( 2 )
+    t [ 0 ] = a
+    t [ 1 ] = b
+    return t
+}
+
+function extended_euclid ( a , b )
+{
+    var history = call make_array ( 0 ) 
+    var a_orig = a
+    var b_orig = b
+    while a != b
+    {
+        if a > b
+        {
+            call array_add ( history , call make_pair ( b , 0 ) )
+            a = a - b
+        }
+        else
+        {
+            call array_add ( history , call make_pair ( 0 , a ) )
+            b = b - a
+        }
+    }
+    var gcd = a
+    var x = 1
+    var y = 0
+    var len = call array_size ( history )
+    var i = len - 1
+    var step = 0
+    while i > -1
+    {
+        step = history [ i ]
+        if step [ 0 ] > 0
+           { y = y - x }
+        else
+           { x = x - y }
+        i = i - 1
+    }
+	
+	i = len - 1
+	while i > -1
+    {
+        step = history [ i ]
+        call array_free ( step )
+        i = i - 1
+    }
+	call array_free ( history )
+    call assert ( a_orig * x + b_orig * y == gcd )
+    var result = call make_array ( 3 )
+    result [ 0 ] = gcd
+    result [ 1 ] = x
+    result [ 2 ] = y
+    return result
+}
+print "extended_euclid_102_and_45"
+var res = call extended_euclid ( 102 , 45 )
+print "gcd"
+print res [ 0 ]
+print ""
+
+print "x"
+print res [ 1 ]
+print ""
+
+print "y"
+print res [ 2 ]
+
+call assert ( res [ 0 ] == 3 && res [ 1 ] == 4 && res [ 2 ] == - 9 )
