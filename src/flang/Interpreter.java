@@ -86,7 +86,7 @@ public class Interpreter implements IRegFunction {
 
     protected void ensureToken(int type) {
         if (getToken().type != type)
-            throw new Error("Unexpected token: " + getToken().value);
+            throw new Error("Line " + getToken().line + ": Unexpected token: " + getToken().value);
     }
 
     protected Token eat(int type) {
@@ -104,7 +104,7 @@ public class Interpreter implements IRegFunction {
             else if (tok.type == Token.R_BRACE)
                 brackets--;
             else if (tok.type == Token.END)
-                throw new Error("Invalid braces structure");
+                throw new Error("Line " + tok.line + ": Invalid braces structure");
         }
         eat(Token.R_BRACE);
     }
@@ -118,7 +118,7 @@ public class Interpreter implements IRegFunction {
                 return;
             }
             if (tok.type == Token.END)
-                throw new Error("Invalid braces structure");
+                throw new Error("Line " + tok.line + ": Invalid braces structure");
             st(ctx);
             if (ctx.wasReturn)
                 return;
@@ -191,7 +191,7 @@ public class Interpreter implements IRegFunction {
             stPrint(ctx);
             break;
         default:
-            throw new Error("Unexpected token " + tok.value);
+            throw new Error("Line " + tok.line + ": Unexpected token: " + tok.value);
         }
     }
 
@@ -252,7 +252,7 @@ public class Interpreter implements IRegFunction {
         eat(Token.ID);// eat name
         IFunction f = (IFunction) functions.get(name);
         if (f == null)
-            throw new Error("Unknown function: " + name);
+            throw new Error("Line " + getToken().line + ": Unknown function: " + name);
         Context funContext = prepareCallContext(ctx, f);
         if (f instanceof UserFunction) {
             UserFunction fUser = (UserFunction) f;

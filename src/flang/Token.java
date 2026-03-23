@@ -39,6 +39,7 @@ class Token {
 
 	public String value;
 	public int type;
+	public int line;
 
 	public static boolean isNumber(String string) {
 		boolean result = true;
@@ -68,68 +69,74 @@ class Token {
 	}
 
 	public static Token[] tokenize(String expr) {
-		String[] data = expr.split("\\s+|\\r+|\\n+");
+		String[] lines = expr.split("\\r?\\n");
 		ArrayList<Token> t = new ArrayList<Token>();
-		for (String string : data) {
-			if (string.isEmpty() || string.equals(" "))
-				continue;
-			Token tok = new Token();
-			if (string.equals("("))
-				tok.type = Token.L_PAREN;
-			else if (string.equals(")"))
-				tok.type = Token.R_PAREN;
-			else if (string.equals("+") || string.equals("-"))
-				tok.type = Token.ADD_OP;
-			else if (string.equals("*") || string.equals("/"))
-				tok.type = Token.MUL_OP;
-			else if (string.equals("||"))
-				tok.type = Token.OR_OP;
-			else if (string.equals("&&"))
-				tok.type = Token.AND_OP;
-			else if (string.equals(">") || string.equals("<") || string.equals("==") || string.equals("!="))
-				tok.type = Token.CMP_OP;
-			else if (string.equals("="))
-				tok.type = Token.ASSIGN;
-			else if (string.equals("{"))
-				tok.type = Token.L_BRACE;
-			else if (string.equals("}"))
-				tok.type = Token.R_BRACE;
-			else if (string.equals("if"))
-				tok.type = Token.IF;
-			else if (string.equals("else"))
-				tok.type = Token.ELSE;
-			else if (string.equals("while"))
-				tok.type = Token.WHILE;
-			else if (string.equals("function"))
-				tok.type = Token.FUNCTION;
-			else if (string.equals(","))
-				tok.type = Token.COMMA;
-			else if (string.equals("call"))
-				tok.type = Token.CALL;
-			else if (string.equals("return"))
-				tok.type = Token.RETURN;
-			else if (string.equals("var"))
-				tok.type = Token.VAR;
-			else if (string.equals("!"))
-				tok.type = Token.NOT;
-			else if (isStringLiteral(string))
-				tok.type = Token.STR;
-			else if (string.equals("print"))
-				tok.type = Token.PRINT;
-			else if (string.equals("["))
-				tok.type = Token.L_SQ;
-			else if (string.equals("]"))
-				tok.type = Token.R_SQ;
-			else if (!isNumber(string)) {
-				if (!isValidId(string))
-					throw new Error("Invalid id: " + string);
-				tok.type = Token.ID;
-			} else
-				tok.type = Token.NUMBER;
-			tok.value = string;
-			t.add(tok);
+		for (int lineNum = 0; lineNum < lines.length; lineNum++) {
+			String[] data = lines[lineNum].trim().split("\\s+");
+			for (String string : data) {
+				if (string.isEmpty() || string.equals(" "))
+					continue;
+				Token tok = new Token();
+				tok.line = lineNum + 1;
+				if (string.equals("("))
+					tok.type = Token.L_PAREN;
+				else if (string.equals(")"))
+					tok.type = Token.R_PAREN;
+				else if (string.equals("+") || string.equals("-"))
+					tok.type = Token.ADD_OP;
+				else if (string.equals("*") || string.equals("/"))
+					tok.type = Token.MUL_OP;
+				else if (string.equals("||"))
+					tok.type = Token.OR_OP;
+				else if (string.equals("&&"))
+					tok.type = Token.AND_OP;
+				else if (string.equals(">") || string.equals("<") || string.equals("==") || string.equals("!="))
+					tok.type = Token.CMP_OP;
+				else if (string.equals("="))
+					tok.type = Token.ASSIGN;
+				else if (string.equals("{"))
+					tok.type = Token.L_BRACE;
+				else if (string.equals("}"))
+					tok.type = Token.R_BRACE;
+				else if (string.equals("if"))
+					tok.type = Token.IF;
+				else if (string.equals("else"))
+					tok.type = Token.ELSE;
+				else if (string.equals("while"))
+					tok.type = Token.WHILE;
+				else if (string.equals("function"))
+					tok.type = Token.FUNCTION;
+				else if (string.equals(","))
+					tok.type = Token.COMMA;
+				else if (string.equals("call"))
+					tok.type = Token.CALL;
+				else if (string.equals("return"))
+					tok.type = Token.RETURN;
+				else if (string.equals("var"))
+					tok.type = Token.VAR;
+				else if (string.equals("!"))
+					tok.type = Token.NOT;
+				else if (isStringLiteral(string))
+					tok.type = Token.STR;
+				else if (string.equals("print"))
+					tok.type = Token.PRINT;
+				else if (string.equals("["))
+					tok.type = Token.L_SQ;
+				else if (string.equals("]"))
+					tok.type = Token.R_SQ;
+				else if (!isNumber(string)) {
+					if (!isValidId(string))
+						throw new Error("Invalid id: " + string + " at line " + (lineNum + 1));
+					tok.type = Token.ID;
+				} else
+					tok.type = Token.NUMBER;
+				tok.value = string;
+				t.add(tok);
+			}
 		}
-		t.add(new Token(Token.END));
+		Token end = new Token(Token.END);
+		end.line = lines.length;
+		t.add(end);
 		return t.toArray(new Token[t.size()]);
 	}
 }
